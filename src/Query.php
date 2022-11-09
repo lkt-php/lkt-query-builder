@@ -87,7 +87,7 @@ class Query
      */
     public static function table(string $table): self
     {
-        return (new Query())->setTable($table);
+        return (new static())->setTable($table);
     }
 
     /**
@@ -153,7 +153,7 @@ class Query
      * @param string $countableField
      * @return string
      */
-    private function getQuery(string $type, string $countableField = ''): string
+    protected function getQuery(string $type, string $countableField = ''): string
     {
         $whereString = $this->getQueryWhere();
 
