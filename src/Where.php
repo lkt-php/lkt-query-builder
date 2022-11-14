@@ -9,6 +9,7 @@ class Where
     use WhereConstraints;
 
     /**
+     * @deprecated
      * @return static
      */
     public static function getInstance(): self
@@ -31,7 +32,15 @@ class Where
      */
     public static function stringEqual(string $column, string $value): self
     {
-        return (new Where())->andStringEqual($column, $value);
+        return (new static())->andStringEqual($column, $value);
+    }
+
+    /**
+     * @return static
+     */
+    public static function raw(string $value): self
+    {
+        return (new static())->andRaw($value);
     }
 
     /**
@@ -41,7 +50,7 @@ class Where
      */
     public static function stringLike(string $column, string $value): self
     {
-        return (new Where())->andStringLike($column, $value);
+        return (new static())->andStringLike($column, $value);
     }
 
     /**
@@ -51,7 +60,7 @@ class Where
      */
     public static function integerEqual(string $column, $value): self
     {
-        return (new Where())->andIntegerEqual($column, $value);
+        return (new static())->andIntegerEqual($column, $value);
     }
 
     /**
@@ -61,7 +70,7 @@ class Where
      */
     public static function integerNot(string $column, $value): self
     {
-        return (new Where())->andIntegerNot($column, $value);
+        return (new static())->andIntegerNot($column, $value);
     }
 
     /**
@@ -71,7 +80,7 @@ class Where
      */
     public static function decimalEqual(string $column, $value): self
     {
-        return (new Where())->andDecimalEqual($column, $value);
+        return (new static())->andDecimalEqual($column, $value);
     }
 
     /**
@@ -81,7 +90,7 @@ class Where
      */
     public static function subQueryEqual(Query $builder, $value): self
     {
-        return (new Where())->andSubQueryEqual($builder, $value);
+        return (new static())->andSubQueryEqual($builder, $value);
     }
 
     /**
@@ -91,7 +100,7 @@ class Where
      */
     public static function subQueryIn(Query $builder, $value): self
     {
-        return (new Where())->andSubQueryIn($builder, $value);
+        return (new static())->andSubQueryIn($builder, $value);
     }
 
     /**
@@ -101,7 +110,7 @@ class Where
      */
     public static function columnInSubQuery($value, Query $builder): self
     {
-        return (new Where())->andColumnInSubQuery($builder, $value);
+        return (new static())->andColumnInSubQuery($builder, $value);
     }
 
     /**

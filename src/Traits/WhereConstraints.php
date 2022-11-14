@@ -169,6 +169,28 @@ trait WhereConstraints
     }
 
     /**
+     * @param string $value
+     * @return $this
+     */
+    public function andRaw(string $value): self
+    {
+        $v = addslashes(stripslashes($value));
+        $this->and[] = $v;
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function orRaw(string $value): self
+    {
+        $v = addslashes(stripslashes($value));
+        $this->or[] = $v;
+        return $this;
+    }
+
+    /**
      * @param Query $builder
      * @param $value
      * @return $this
