@@ -174,7 +174,7 @@ trait WhereConstraints
      */
     public function andRaw(string $value): self
     {
-        $v = addslashes(stripslashes($value));
+        $v = stripslashes($value);
         $this->and[] = $v;
         return $this;
     }
@@ -185,7 +185,7 @@ trait WhereConstraints
      */
     public function orRaw(string $value): self
     {
-        $v = addslashes(stripslashes($value));
+        $v = stripslashes($value);
         $this->or[] = $v;
         return $this;
     }

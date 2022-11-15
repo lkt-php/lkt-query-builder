@@ -272,4 +272,84 @@ class Query
 
         return implode(',', $r);
     }
+
+    /**
+     * @return string
+     */
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+
+    /**
+     * @return array
+     */
+    public function getJoins(): array
+    {
+        return $this->joins;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasOrder(): bool
+    {
+        return $this->orderBy !== '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrder(): string
+    {
+        return $this->orderBy;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPagination(): bool
+    {
+        return $this->page > -1 && $this->limit > -1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLimit(): bool
+    {
+        return $this->limit > -1;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage(): int
+    {
+        return $this->page;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit(): int
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumns(): array
+    {
+        return $this->columns;
+    }
 }

@@ -2,7 +2,7 @@
   "name": "lkt/query-builder",
   "description": "LKT Query Builder",
   "type": "library",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "require": {
     "php": ">=7.2.0",
     "lkt/tools": "^1.2"
