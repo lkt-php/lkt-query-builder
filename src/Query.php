@@ -135,7 +135,13 @@ class Query
      */
     public function getQueryWhere(): string
     {
-        $where = [$this->whereConstraintsToString()];
+        $where = [];
+
+        $whereConstraints = $this->whereConstraintsToString();
+        if ($whereConstraints !== '') {
+            $where[] = $whereConstraints;
+        }
+
         foreach ($this->constraints as $value) {
             $where[] = $value;
         }
@@ -152,6 +158,7 @@ class Query
      * @param string $type
      * @param string $countableField
      * @return string
+     * @deprecated
      */
     protected function getQuery(string $type, string $countableField = ''): string
     {
@@ -221,6 +228,7 @@ class Query
 
     /**
      * @return string
+     * @deprecated
      */
     final public function getSelectQuery(): string
     {
@@ -229,6 +237,7 @@ class Query
 
     /**
      * @return string
+     * @deprecated
      */
     final public function getSelectDistinctQuery(): string
     {
@@ -238,6 +247,7 @@ class Query
     /**
      * @param string $countableField
      * @return string
+     * @deprecated
      */
     final public function getCountQuery(string $countableField): string
     {
@@ -246,6 +256,7 @@ class Query
 
     /**
      * @return string
+     * @deprecated
      */
     final public function getInsertQuery(): string
     {
@@ -254,6 +265,7 @@ class Query
 
     /**
      * @return string
+     * @deprecated
      */
     final public function getUpdateQuery(): string
     {
@@ -262,6 +274,7 @@ class Query
 
     /**
      * @return string
+     * @deprecated
      */
     private function buildColumns(): string
     {

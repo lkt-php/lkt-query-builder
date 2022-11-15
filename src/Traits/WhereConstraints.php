@@ -33,7 +33,10 @@ trait WhereConstraints
             $data[] = implode(' OR ', $or);
         }
 
-        return '(' . implode(' OR ', $data) . ')';
+        if (count($data) > 0) {
+            return '(' . implode(' OR ', $data) . ')';
+        }
+        return '';
     }
 
     /**
