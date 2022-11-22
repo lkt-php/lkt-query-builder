@@ -2,6 +2,21 @@
 
 namespace Lkt\QueryBuilding\Traits;
 
+use Lkt\QueryBuilding\Constraints\BooleanFalseConstraint;
+use Lkt\QueryBuilding\Constraints\BooleanTrueConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalEqualConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalGreaterThanConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalLowerThanConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalNotConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerEqualConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerGreaterThanConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerLowerThanConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerNotConstraint;
+use Lkt\QueryBuilding\Constraints\RawConstraint;
+use Lkt\QueryBuilding\Constraints\StringEqualConstraint;
+use Lkt\QueryBuilding\Constraints\StringInConstraint;
+use Lkt\QueryBuilding\Constraints\StringLikeConstraint;
+use Lkt\QueryBuilding\Constraints\StringNotInConstraint;
 use Lkt\QueryBuilding\Query;
 use Lkt\QueryBuilding\Where;
 
@@ -39,157 +54,183 @@ trait WhereConstraints
         return '';
     }
 
-    /**
-     * @param string $column
-     * @param string $value
-     * @return $this
-     */
     public function andStringEqual(string $column, string $value): self
     {
-        if (strpos($value, 'COMPRESS(') === 0) {
-            $this->and[] = "{$column}={$value}";
-        } else {
-            $v = addslashes(stripslashes($value));
-            $this->and[] = "{$column}='{$v}'";
-        }
-
+        $this->and[] = StringEqualConstraint::define($column, $value);
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param string $value
-     * @return $this
-     */
     public function orStringEqual(string $column, string $value): self
     {
-        if (strpos($value, 'COMPRESS(') === 0) {
-            $this->or[] = "{$column}={$value}";
-        } else {
-            $v = addslashes(stripslashes($value));
-            $this->or[] = "{$column}='{$v}'";
-        }
-
+        $this->or[] = StringEqualConstraint::define($column, $value);
         return $this;
     }
 
-
-    /**
-     * @param string $column
-     * @param string $value
-     * @return $this
-     */
     public function andStringLike(string $column, string $value): self
     {
-        $v = addslashes(stripslashes($value));
-        $this->and[] = "{$column} LIKE '%{$v}%'";
+        $this->and[] = StringLikeConstraint::define($column, $value);
         return $this;
     }
 
-
-    /**
-     * @param string $column
-     * @param string $value
-     * @return $this
-     */
     public function orStringLike(string $column, string $value): self
     {
-        $v = addslashes(stripslashes($value));
-        $this->or[] = "{$column} LIKE '%{$v}%'";
+        $this->or[] = StringLikeConstraint::define($column, $value);
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param $value
-     * @return $this
-     */
+    public function andStringIn(string $column, array $values): self
+    {
+        $this->and[] = StringInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function orStringIn(string $column, array $values): self
+    {
+        $this->or[] = StringInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function andStringNotIn(string $column, array $values): self
+    {
+        $this->and[] = StringNotInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function orStringNotIn(string $column, array $values): self
+    {
+        $this->or[] = StringNotInConstraint::define($column, $values);
+        return $this;
+    }
+
     public function andIntegerEqual(string $column, $value): self
     {
-        $v = addslashes(stripslashes((int)$value));
-        $this->and[] = "{$column}={$v}";
+        $this->and[] = IntegerEqualConstraint::define($column, $value);
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param $value
-     * @return $this
-     */
     public function orIntegerEqual(string $column, $value): self
     {
-        $v = addslashes(stripslashes((int)$value));
-        $this->or[] = "{$column}={$v}";
+        $this->or[] = IntegerEqualConstraint::define($column, $value);
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param $value
-     * @return $this
-     */
     public function andIntegerNot(string $column, $value): self
     {
-        $v = addslashes(stripslashes((int)$value));
-        $this->and[] = "{$column}!={$v}";
+        $this->and[] = IntegerNotConstraint::define($column, $value);
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param $value
-     * @return $this
-     */
     public function orIntegerNot(string $column, $value): self
     {
-        $v = addslashes(stripslashes((int)$value));
-        $this->or[] = "{$column}!={$v}";
+        $this->or[] = IntegerNotConstraint::define($column, $value);
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param $value
-     * @return $this
-     */
+    public function andIntegerGreaterThan(string $column, $value): self
+    {
+        $this->and[] = IntegerGreaterThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orIntegerGreaterThan(string $column, $value): self
+    {
+        $this->or[] = IntegerGreaterThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andIntegerLowerThan(string $column, $value): self
+    {
+        $this->and[] = IntegerLowerThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orIntegerLowerThan(string $column, $value): self
+    {
+        $this->or[] = IntegerLowerThanConstraint::define($column, $value);
+        return $this;
+    }
+
     public function andDecimalEqual(string $column, $value): self
     {
-        $v = addslashes(stripslashes((float)$value));
-        $this->and[] = "{$column}={$v}";
+        $this->and[] = DecimalEqualConstraint::define($column, $value);
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param $value
-     * @return $this
-     */
     public function orDecimalEqual(string $column, $value): self
     {
-        $v = addslashes(stripslashes((float)$value));
-        $this->or[] = "{$column}={$v}";
+        $this->or[] = DecimalEqualConstraint::define($column, $value);
         return $this;
     }
 
-    /**
-     * @param string $value
-     * @return $this
-     */
+    public function andDecimalNot(string $column, $value): self
+    {
+        $this->and[] = DecimalNotConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDecimalNot(string $column, $value): self
+    {
+        $this->or[] = DecimalNotConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDecimalGreaterThan(string $column, $value): self
+    {
+        $this->and[] = DecimalGreaterThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDecimalGreaterThan(string $column, $value): self
+    {
+        $this->or[] = DecimalGreaterThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDecimalLowerThan(string $column, $value): self
+    {
+        $this->and[] = DecimalLowerThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDecimalLowerThan(string $column, $value): self
+    {
+        $this->or[] = DecimalLowerThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andBooleanTrue(string $column): self
+    {
+        $this->and[] = BooleanTrueConstraint::define($column);
+        return $this;
+    }
+
+    public function orBooleanTrue(string $column): self
+    {
+        $this->or[] = BooleanTrueConstraint::define($column);
+        return $this;
+    }
+
+    public function andBooleanFalse(string $column): self
+    {
+        $this->and[] = BooleanFalseConstraint::define($column);
+        return $this;
+    }
+
+    public function orBooleanFalse(string $column): self
+    {
+        $this->or[] = BooleanFalseConstraint::define($column);
+        return $this;
+    }
+
     public function andRaw(string $value): self
     {
-        $v = stripslashes($value);
-        $this->and[] = $v;
+        $this->and[] = RawConstraint::define($value);
         return $this;
     }
 
-    /**
-     * @param string $value
-     * @return $this
-     */
     public function orRaw(string $value): self
     {
-        $v = stripslashes($value);
-        $this->or[] = $v;
+        $this->or[] = RawConstraint::define($value);
         return $this;
     }
 

@@ -1,0 +1,18 @@
+<?php
+
+namespace Lkt\QueryBuilding\Constraints;
+
+class StringNotConstraint extends AbstractConstraint
+{
+    public function __toString(): string
+    {
+        $column = $this->column;
+        $value = $this->value;
+        if (strpos($value, 'COMPRESS(') === 0) {
+            return "{$column}!={$value}";
+        }
+
+        $v = addslashes(stripslashes($value));
+        return "{$column}!='{$v}'";
+    }
+}
