@@ -8,6 +8,7 @@ use Lkt\QueryBuilding\Constraints\DecimalEqualConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalGreaterThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalLowerThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalNotConstraint;
+use Lkt\QueryBuilding\Constraints\ForeignKeysContainsConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerEqualConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerGreaterThanConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerLowerThanConstraint;
@@ -16,6 +17,7 @@ use Lkt\QueryBuilding\Constraints\RawConstraint;
 use Lkt\QueryBuilding\Constraints\StringEqualConstraint;
 use Lkt\QueryBuilding\Constraints\StringInConstraint;
 use Lkt\QueryBuilding\Constraints\StringLikeConstraint;
+use Lkt\QueryBuilding\Constraints\StringNotConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotInConstraint;
 use Lkt\QueryBuilding\Query;
 use Lkt\QueryBuilding\Where;
@@ -63,6 +65,18 @@ trait WhereConstraints
     public function orStringEqual(string $column, string $value): self
     {
         $this->or[] = StringEqualConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andStringNot(string $column, string $value): self
+    {
+        $this->and[] = StringNotConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orStringNot(string $column, string $value): self
+    {
+        $this->or[] = StringNotConstraint::define($column, $value);
         return $this;
     }
 
@@ -219,6 +233,18 @@ trait WhereConstraints
     public function orBooleanFalse(string $column): self
     {
         $this->or[] = BooleanFalseConstraint::define($column);
+        return $this;
+    }
+
+    public function andForeignKeysContains(string $column, $value): self
+    {
+        $this->and[] = ForeignKeysContainsConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orForeignKeysContains(string $column, $value): self
+    {
+        $this->or[] = ForeignKeysContainsConstraint::define($column, $value);
         return $this;
     }
 

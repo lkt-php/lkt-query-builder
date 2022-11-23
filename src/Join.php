@@ -66,7 +66,15 @@ class Join
 
         $on = [];
         foreach ($this->on as $value) {
-            $on[] = "{{---LKT_PARENT_TABLE---}}.{$value[0]} = {$this->table}.{$value[1]}";
+            $partOne = $value[0];
+            if (!is_numeric($partOne)) {
+                $partOne = "{{---LKT_PARENT_TABLE---}}.{$partOne}";
+            }
+            $partTwo = $value[1];
+            if (!is_numeric($partTwo)) {
+                $partTwo = "{$this->table}.{$partTwo}";
+            }
+            $on[] = "{$partOne} = {$partTwo}";
         }
         $strOn = implode(' AND ', $on);
         if ($strOn !== '') {

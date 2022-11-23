@@ -230,52 +230,6 @@ class Query
      * @return string
      * @deprecated
      */
-    final public function getSelectQuery(): string
-    {
-        return $this->getQuery('select');
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    final public function getSelectDistinctQuery(): string
-    {
-        return $this->getQuery('selectDistinct');
-    }
-
-    /**
-     * @param string $countableField
-     * @return string
-     * @deprecated
-     */
-    final public function getCountQuery(string $countableField): string
-    {
-        return $this->getQuery('count', $countableField);
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    final public function getInsertQuery(): string
-    {
-        return $this->getQuery('insert');
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    final public function getUpdateQuery(): string
-    {
-        return $this->getQuery('update');
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
     private function buildColumns(): string
     {
         $r = [];
