@@ -4,13 +4,20 @@ namespace Lkt\QueryBuilding\Traits;
 
 use Lkt\QueryBuilding\Constraints\BooleanFalseConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanTrueConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeBetweenConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalEqualConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalGreaterOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalGreaterThanConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalLowerOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalLowerThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalNotConstraint;
 use Lkt\QueryBuilding\Constraints\ForeignKeysContainsConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerEqualConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerGreaterOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerGreaterThanConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerLowerOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerLowerThanConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerNotConstraint;
 use Lkt\QueryBuilding\Constraints\RawConstraint;
@@ -152,6 +159,18 @@ trait WhereConstraints
         return $this;
     }
 
+    public function andIntegerGreaterOrEqualThan(string $column, $value): self
+    {
+        $this->and[] = IntegerGreaterOrEqualThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orIntegerGreaterOrEqualThan(string $column, $value): self
+    {
+        $this->or[] = IntegerGreaterOrEqualThanConstraint::define($column, $value);
+        return $this;
+    }
+
     public function andIntegerLowerThan(string $column, $value): self
     {
         $this->and[] = IntegerLowerThanConstraint::define($column, $value);
@@ -161,6 +180,18 @@ trait WhereConstraints
     public function orIntegerLowerThan(string $column, $value): self
     {
         $this->or[] = IntegerLowerThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andIntegerLowerOrEqualThan(string $column, $value): self
+    {
+        $this->and[] = IntegerLowerOrEqualThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orIntegerLowerOrEqualThan(string $column, $value): self
+    {
+        $this->or[] = IntegerLowerOrEqualThanConstraint::define($column, $value);
         return $this;
     }
 
@@ -200,6 +231,18 @@ trait WhereConstraints
         return $this;
     }
 
+    public function andDecimalGreaterOrEqualThan(string $column, $value): self
+    {
+        $this->and[] = DecimalGreaterOrEqualThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDecimalGreaterOrEqualThan(string $column, $value): self
+    {
+        $this->or[] = DecimalGreaterOrEqualThanConstraint::define($column, $value);
+        return $this;
+    }
+
     public function andDecimalLowerThan(string $column, $value): self
     {
         $this->and[] = DecimalLowerThanConstraint::define($column, $value);
@@ -209,6 +252,18 @@ trait WhereConstraints
     public function orDecimalLowerThan(string $column, $value): self
     {
         $this->or[] = DecimalLowerThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDecimalLowerOrEqualThan(string $column, $value): self
+    {
+        $this->and[] = DecimalLowerOrEqualThanConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDecimalLowerOrEqualThan(string $column, $value): self
+    {
+        $this->or[] = DecimalLowerOrEqualThanConstraint::define($column, $value);
         return $this;
     }
 
@@ -245,6 +300,42 @@ trait WhereConstraints
     public function orForeignKeysContains(string $column, $value): self
     {
         $this->or[] = ForeignKeysContainsConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDatetimeBetween(string $column, $from, $to): self
+    {
+        $this->and[] = DatetimeBetweenConstraint::define($column, [$from, $to]);
+        return $this;
+    }
+
+    public function orDatetimeBetween(string $column, $from, $to): self
+    {
+        $this->or[] = DatetimeBetweenConstraint::define($column, [$from, $to]);
+        return $this;
+    }
+
+    public function andIntegerBetween(string $column, $from, $to): self
+    {
+        $this->and[] = IntegerBetweenConstraint::define($column, [$from, $to]);
+        return $this;
+    }
+
+    public function orIntegerBetween(string $column, $from, $to): self
+    {
+        $this->or[] = IntegerBetweenConstraint::define($column, [$from, $to]);
+        return $this;
+    }
+
+    public function andDecimalBetween(string $column, $from, $to): self
+    {
+        $this->and[] = DecimalBetweenConstraint::define($column, [$from, $to]);
+        return $this;
+    }
+
+    public function orDecimalBetween(string $column, $from, $to): self
+    {
+        $this->or[] = DecimalBetweenConstraint::define($column, [$from, $to]);
         return $this;
     }
 
