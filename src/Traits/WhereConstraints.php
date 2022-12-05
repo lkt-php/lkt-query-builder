@@ -9,23 +9,34 @@ use Lkt\QueryBuilding\Constraints\DecimalBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalEqualConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalGreaterOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalGreaterThanConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalInConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalLowerOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalLowerThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalNotConstraint;
+use Lkt\QueryBuilding\Constraints\DecimalNotInConstraint;
 use Lkt\QueryBuilding\Constraints\ForeignKeysContainsConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerEqualConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerGreaterOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerGreaterThanConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerInConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerLowerOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerLowerThanConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerNotConstraint;
+use Lkt\QueryBuilding\Constraints\IntegerNotInConstraint;
+use Lkt\QueryBuilding\Constraints\IsNotNullConstraint;
+use Lkt\QueryBuilding\Constraints\IsNullConstraint;
 use Lkt\QueryBuilding\Constraints\RawConstraint;
 use Lkt\QueryBuilding\Constraints\StringEqualConstraint;
+use Lkt\QueryBuilding\Constraints\StringEndsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringInConstraint;
 use Lkt\QueryBuilding\Constraints\StringLikeConstraint;
+use Lkt\QueryBuilding\Constraints\StringNotBeginsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotConstraint;
+use Lkt\QueryBuilding\Constraints\StringNotEndsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotInConstraint;
+use Lkt\QueryBuilding\Constraints\StringBeginsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\StringNotLikeConstraint;
 use Lkt\QueryBuilding\Query;
 use Lkt\QueryBuilding\Where;
 
@@ -99,6 +110,66 @@ trait WhereConstraints
         return $this;
     }
 
+    public function andStringNotLike(string $column, string $value): self
+    {
+        $this->and[] = StringNotLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orStringNotLike(string $column, string $value): self
+    {
+        $this->or[] = StringNotLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andStringBeginsLike(string $column, string $value): self
+    {
+        $this->and[] = StringBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orStringBeginsLike(string $column, string $value): self
+    {
+        $this->or[] = StringBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andStringNotBeginsLike(string $column, string $value): self
+    {
+        $this->and[] = StringNotBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orStringNotBeginsLike(string $column, string $value): self
+    {
+        $this->or[] = StringNotBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andStringEndsLike(string $column, string $value): self
+    {
+        $this->and[] = StringEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orStringEndsLike(string $column, string $value): self
+    {
+        $this->or[] = StringEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andStringNotEndsLike(string $column, string $value): self
+    {
+        $this->and[] = StringNotEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orStringNotEndsLike(string $column, string $value): self
+    {
+        $this->or[] = StringNotEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
     public function andStringIn(string $column, array $values): self
     {
         $this->and[] = StringInConstraint::define($column, $values);
@@ -108,6 +179,54 @@ trait WhereConstraints
     public function orStringIn(string $column, array $values): self
     {
         $this->or[] = StringInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function andIntegerIn(string $column, array $values): self
+    {
+        $this->and[] = IntegerInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function orIntegerIn(string $column, array $values): self
+    {
+        $this->or[] = IntegerInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function andDecimalIn(string $column, array $values): self
+    {
+        $this->and[] = DecimalInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function orDecimalIn(string $column, array $values): self
+    {
+        $this->or[] = DecimalInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function andIntegerNotIn(string $column, array $values): self
+    {
+        $this->and[] = IntegerNotInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function orIntegerNotIn(string $column, array $values): self
+    {
+        $this->or[] = IntegerNotInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function andDecimalNotIn(string $column, array $values): self
+    {
+        $this->and[] = DecimalNotInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function orDecimalNotIn(string $column, array $values): self
+    {
+        $this->or[] = DecimalNotInConstraint::define($column, $values);
         return $this;
     }
 
@@ -204,6 +323,30 @@ trait WhereConstraints
     public function orDecimalEqual(string $column, $value): self
     {
         $this->or[] = DecimalEqualConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andIsNull(string $column): self
+    {
+        $this->and[] = IsNullConstraint::define($column);
+        return $this;
+    }
+
+    public function orIsNull(string $column): self
+    {
+        $this->or[] = IsNullConstraint::define($column);
+        return $this;
+    }
+
+    public function andIsNotNull(string $column): self
+    {
+        $this->and[] = IsNotNullConstraint::define($column);
+        return $this;
+    }
+
+    public function orIsNotNull(string $column): self
+    {
+        $this->or[] = IsNotNullConstraint::define($column);
         return $this;
     }
 
