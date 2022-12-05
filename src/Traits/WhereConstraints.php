@@ -5,6 +5,16 @@ namespace Lkt\QueryBuilding\Traits;
 use Lkt\QueryBuilding\Constraints\BooleanFalseConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanTrueConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeBetweenConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeEqualConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeGreaterOrEqualThanConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeGreaterOrEqualThanNowConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeGreaterThanConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeGreaterThanNowConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeLowerOrEqualThanConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeLowerOrEqualThanNowConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeLowerThanConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeLowerThanNowConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeNotConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalEqualConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalGreaterOrEqualThanConstraint;
@@ -27,16 +37,17 @@ use Lkt\QueryBuilding\Constraints\IntegerNotInConstraint;
 use Lkt\QueryBuilding\Constraints\IsNotNullConstraint;
 use Lkt\QueryBuilding\Constraints\IsNullConstraint;
 use Lkt\QueryBuilding\Constraints\RawConstraint;
-use Lkt\QueryBuilding\Constraints\StringEqualConstraint;
+use Lkt\QueryBuilding\Constraints\StringBeginsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringEndsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\StringEqualConstraint;
 use Lkt\QueryBuilding\Constraints\StringInConstraint;
 use Lkt\QueryBuilding\Constraints\StringLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotBeginsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotEndsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotInConstraint;
-use Lkt\QueryBuilding\Constraints\StringBeginsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotLikeConstraint;
+use Lkt\QueryBuilding\DateIntervals\AbstractInterval;
 use Lkt\QueryBuilding\Query;
 use Lkt\QueryBuilding\Where;
 
@@ -455,6 +466,126 @@ trait WhereConstraints
     public function orDatetimeBetween(string $column, $from, $to): self
     {
         $this->or[] = DatetimeBetweenConstraint::define($column, [$from, $to]);
+        return $this;
+    }
+
+    public function andDatetimeEqual(string $column, $value): self
+    {
+        $this->and[] = DatetimeEqualConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDatetimeEqual(string $column, $value): self
+    {
+        $this->or[] = DatetimeEqualConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDatetimeNot(string $column, $value): self
+    {
+        $this->and[] = DatetimeNotConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDatetimeNot(string $column, $value): self
+    {
+        $this->or[] = DatetimeNotConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDatetimeGreaterOrEqualThan(string $column, $value, AbstractInterval $interval = null): self
+    {
+        $this->and[] = DatetimeGreaterOrEqualThanConstraint::define($column, $value)->setInterval($interval);
+        return $this;
+    }
+
+    public function orDatetimeGreaterOrEqualThan(string $column, $value, AbstractInterval $interval = null): self
+    {
+        $this->or[] = DatetimeGreaterOrEqualThanConstraint::define($column, $value)->setInterval($interval);
+        return $this;
+    }
+
+    public function andDatetimeGreaterOrEqualThanNow(string $column, AbstractInterval $interval = null): self
+    {
+        $this->and[] = DatetimeGreaterOrEqualThanNowConstraint::define($column)->setInterval($interval);
+        return $this;
+    }
+
+    public function orDatetimeGreaterOrEqualThanNow(string $column, AbstractInterval $interval = null): self
+    {
+        $this->or[] = DatetimeGreaterOrEqualThanNowConstraint::define($column)->setInterval($interval);
+        return $this;
+    }
+
+    public function andDatetimeGreaterThan(string $column, $value, AbstractInterval $interval = null): self
+    {
+        $this->and[] = DatetimeGreaterThanConstraint::define($column, $value)->setInterval($interval);
+        return $this;
+    }
+
+    public function orDatetimeGreaterThan(string $column, $value, AbstractInterval $interval = null): self
+    {
+        $this->or[] = DatetimeGreaterThanConstraint::define($column, $value)->setInterval($interval);
+        return $this;
+    }
+
+    public function andDatetimeGreaterThanNow(string $column, AbstractInterval $interval = null): self
+    {
+        $this->and[] = DatetimeGreaterThanNowConstraint::define($column)->setInterval($interval);
+        return $this;
+    }
+
+    public function orDatetimeGreaterThanNow(string $column, AbstractInterval $interval = null): self
+    {
+        $this->or[] = DatetimeGreaterThanNowConstraint::define($column)->setInterval($interval);
+        return $this;
+    }
+
+    public function andDatetimeLowerOrEqualThan(string $column, $value, AbstractInterval $interval = null): self
+    {
+        $this->and[] = DatetimeLowerOrEqualThanConstraint::define($column, $value)->setInterval($interval);
+        return $this;
+    }
+
+    public function orDatetimeLowerOrEqualThan(string $column, $value, AbstractInterval $interval = null): self
+    {
+        $this->or[] = DatetimeLowerOrEqualThanConstraint::define($column, $value)->setInterval($interval);
+        return $this;
+    }
+
+    public function andDatetimeLowerOrEqualThanNow(string $column, AbstractInterval $interval = null): self
+    {
+        $this->and[] = DatetimeLowerOrEqualThanNowConstraint::define($column)->setInterval($interval);
+        return $this;
+    }
+
+    public function orDatetimeLowerOrEqualThanNow(string $column, AbstractInterval $interval = null): self
+    {
+        $this->or[] = DatetimeLowerOrEqualThanNowConstraint::define($column)->setInterval($interval);
+        return $this;
+    }
+
+    public function andDatetimeLowerThan(string $column, $value, AbstractInterval $interval = null): self
+    {
+        $this->and[] = DatetimeLowerThanConstraint::define($column, $value)->setInterval($interval);
+        return $this;
+    }
+
+    public function orDatetimeLowerThan(string $column, $value, AbstractInterval $interval = null): self
+    {
+        $this->or[] = DatetimeLowerThanConstraint::define($column, $value)->setInterval($interval);
+        return $this;
+    }
+
+    public function andDatetimeLowerThanNow(string $column, AbstractInterval $interval = null): self
+    {
+        $this->and[] = DatetimeLowerThanNowConstraint::define($column)->setInterval($interval);
+        return $this;
+    }
+
+    public function orDatetimeLowerThanNow(string $column, AbstractInterval $interval = null): self
+    {
+        $this->or[] = DatetimeLowerThanNowConstraint::define($column)->setInterval($interval);
         return $this;
     }
 

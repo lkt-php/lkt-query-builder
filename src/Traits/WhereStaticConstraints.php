@@ -2,6 +2,8 @@
 
 namespace Lkt\QueryBuilding\Traits;
 
+use Lkt\QueryBuilding\DateIntervals\AbstractInterval;
+
 trait WhereStaticConstraints
 {
     public static function booleanFalse(string $column)
@@ -17,6 +19,56 @@ trait WhereStaticConstraints
     public static function datetimeBetween(string $column, $from, $to)
     {
         return (new static())->andDatetimeBetween($column, $from, $to);
+    }
+
+    public static function datetimeEqual(string $column, $value)
+    {
+        return (new static())->andDatetimeEqual($column, $value);
+    }
+
+    public static function datetimeNot(string $column, $value)
+    {
+        return (new static())->andDatetimeNot($column, $value);
+    }
+
+    public static function datetimeGreaterOrEqualThan(string $column, $value, AbstractInterval $interval = null)
+    {
+        return (new static())->andDatetimeGreaterOrEqualThan($column, $value, $interval);
+    }
+
+    public static function datetimeGreaterOrEqualThanNow(string $column, AbstractInterval $interval = null)
+    {
+        return (new static())->andDatetimeGreaterOrEqualThanNow($column, $interval);
+    }
+
+    public static function datetimeGreaterThan(string $column, $value, AbstractInterval $interval = null)
+    {
+        return (new static())->andDatetimeGreaterThan($column, $value, $interval);
+    }
+
+    public static function datetimeGreaterThanNow(string $column, AbstractInterval $interval = null)
+    {
+        return (new static())->andDatetimeGreaterThanNow($column, $interval);
+    }
+
+    public static function datetimeLowerOrEqualThan(string $column, $value, AbstractInterval $interval = null)
+    {
+        return (new static())->andDatetimeLowerOrEqualThan($column, $value, $interval);
+    }
+
+    public static function datetimeLowerOrEqualThanNow(string $column, AbstractInterval $interval = null)
+    {
+        return (new static())->andDatetimeLowerOrEqualThanNow($column, $interval);
+    }
+
+    public static function datetimeLowerThan(string $column, $value, AbstractInterval $interval = null)
+    {
+        return (new static())->andDatetimeLowerThan($column, $value, $interval);
+    }
+
+    public static function datetimeLowerThanNow(string $column, AbstractInterval $interval = null)
+    {
+        return (new static())->andDatetimeLowerThanNow($column, $interval);
     }
 
     public static function decimalBetween(string $column, $from, $to)
