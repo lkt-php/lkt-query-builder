@@ -11,9 +11,9 @@ class ForeignKeysContainsConstraint extends AbstractConstraint
 
         if ($v !== '') {
             $t = [];
-            $t[] = "{$key} LIKE '%,{$v},%'";
-            $t[] = "{$key} LIKE '%,{$v}'";
-            $t[] = "{$key} LIKE '{$v},%'";
+            $t[] = "{$key} LIKE '%;{$v};%'";
+            $t[] = "{$key} LIKE '%;{$v}'";
+            $t[] = "{$key} LIKE '{$v};%'";
             $t[] = "{$key} = '{$v}'";
             return '(' . implode(' OR ', $t) . ')';
         }

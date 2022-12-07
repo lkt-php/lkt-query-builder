@@ -71,6 +71,36 @@ trait WhereStaticConstraints
         return (new static())->andDatetimeLowerThanNow($column, $interval);
     }
 
+    public static function datetimeLike(string $column, string $value)
+    {
+        return (new static())->andDatetimeLike($column, $value);
+    }
+
+    public static function datetimeBeginsLike(string $column, string $value)
+    {
+        return (new static())->andDatetimeBeginsLike($column, $value);
+    }
+
+    public static function datetimeEndsLike(string $column, string $value)
+    {
+        return (new static())->andDatetimeEndsLike($column, $value);
+    }
+
+    public static function datetimeNotLike(string $column, string $value)
+    {
+        return (new static())->andDatetimeNotLike($column, $value);
+    }
+
+    public static function datetimeNotBeginsLike(string $column, string $value)
+    {
+        return (new static())->andDatetimeNotBeginsLike($column, $value);
+    }
+
+    public static function datetimeNotEndsLike(string $column, string $value)
+    {
+        return (new static())->andDatetimeNotEndsLike($column, $value);
+    }
+
     public static function decimalBetween(string $column, $from, $to)
     {
         return (new static())->andDecimalBetween($column, $from, $to);

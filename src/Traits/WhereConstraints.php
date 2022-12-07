@@ -4,17 +4,23 @@ namespace Lkt\QueryBuilding\Traits;
 
 use Lkt\QueryBuilding\Constraints\BooleanFalseConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanTrueConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeBeginsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeBetweenConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeEndsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeEqualConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeGreaterOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeGreaterOrEqualThanNowConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeGreaterThanConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeGreaterThanNowConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeLikeConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeLowerOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeLowerOrEqualThanNowConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeLowerThanConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeLowerThanNowConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeNotBeginsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeNotConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeNotEndsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\DatetimeNotLikeConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalEqualConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalGreaterOrEqualThanConstraint;
@@ -586,6 +592,78 @@ trait WhereConstraints
     public function orDatetimeLowerThanNow(string $column, AbstractInterval $interval = null): self
     {
         $this->or[] = DatetimeLowerThanNowConstraint::define($column)->setInterval($interval);
+        return $this;
+    }
+
+    public function andDatetimeLike(string $column, string $value): self
+    {
+        $this->and[] = DatetimeLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDatetimeLike(string $column, string $value): self
+    {
+        $this->or[] = DatetimeLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDatetimeNotLike(string $column, string $value): self
+    {
+        $this->and[] = DatetimeNotLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDatetimeNotLike(string $column, string $value): self
+    {
+        $this->or[] = DatetimeNotLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDatetimeBeginsLike(string $column, string $value): self
+    {
+        $this->and[] = DatetimeBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDatetimeBeginsLike(string $column, string $value): self
+    {
+        $this->or[] = DatetimeBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDatetimeNotBeginsLike(string $column, string $value): self
+    {
+        $this->and[] = DatetimeNotBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDatetimeNotBeginsLike(string $column, string $value): self
+    {
+        $this->or[] = DatetimeNotBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDatetimeEndsLike(string $column, string $value): self
+    {
+        $this->and[] = DatetimeEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDatetimeEndsLike(string $column, string $value): self
+    {
+        $this->or[] = DatetimeEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andDatetimeNotEndsLike(string $column, string $value): self
+    {
+        $this->and[] = DatetimeNotEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orDatetimeNotEndsLike(string $column, string $value): self
+    {
+        $this->or[] = DatetimeNotEndsLikeConstraint::define($column, $value);
         return $this;
     }
 
