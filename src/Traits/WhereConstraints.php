@@ -2,6 +2,7 @@
 
 namespace Lkt\QueryBuilding\Traits;
 
+use Lkt\QueryBuilding\Constraints\AbstractConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanFalseConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanTrueConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeBeginsLikeConstraint;
@@ -54,6 +55,7 @@ use Lkt\QueryBuilding\Constraints\StringNotEndsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotInConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotLikeConstraint;
 use Lkt\QueryBuilding\DateIntervals\AbstractInterval;
+use Lkt\QueryBuilding\Enums\ProcessRule;
 use Lkt\QueryBuilding\Query;
 use Lkt\QueryBuilding\Where;
 
@@ -67,11 +69,17 @@ trait WhereConstraints
         $r = [];
 
         foreach ($this->and as $constraint) {
+            if ($constraint instanceof AbstractConstraint) {
+                $constraint->setTable($this->getTable(), $this->getTableAlias());
+            }
             $r[] = (string)$constraint;
         }
 
         $or = [];
         foreach ($this->or as $constraint) {
+            if ($constraint instanceof AbstractConstraint) {
+                $constraint->setTable($this->getTable(), $this->getTableAlias());
+            }
             $or[] = (string)$constraint;
         }
 
@@ -798,6 +806,76 @@ trait WhereConstraints
     final public function orWhere(Where $where): self
     {
         $this->or[] = $where;
+        return $this;
+    }
+
+    public function addStringProcessRule(string $column, $value, string $rule)
+    {
+        if ($rule === ProcessRule::like) {
+            return $this->andStringLike($column, $value);
+        }
+        if ($rule === ProcessRule::notLike) {
+            return $this->andStringNotLike($column, $value);
+        }
+        if ($rule === ProcessRule::equal) {
+            return $this->andStringEqual($column, $value);
+        }
+        if ($rule === ProcessRule::beginsLike) {
+            return $this->andStringBeginsLike($column, $value);
+        }
+        if ($rule === ProcessRule::notBeginsLike) {
+            return $this->andStringNotBeginsLike($column, $value);
+        }
+        if ($rule === ProcessRule::endsLike) {
+            return $this->andStringEndsLike($column, $value);
+        }
+        if ($rule === ProcessRule::notEndsLike) {
+            return $this->andStringNotEndsLike($column, $value);
+        }
+        if ($rule === ProcessRule::in) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            return $this->andStringIn($column, $value);
+        }
+        if ($rule === ProcessRule::notIn) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            return $this->andStringNotIn($column, $value);
+        }
+        return $this;
+    }
+
+    public function addIntegerProcessRule(string $column, $value, string $rule)
+    {
+        if ($rule === ProcessRule::equal) {
+            return $this->andIntegerEqual($column, $value);
+        }
+        if ($rule === ProcessRule::greaterThan) {
+            return $this->andIntegerGreaterThan($column, $value);
+        }
+        if ($rule === ProcessRule::greaterOrEqualThan) {
+            return $this->andIntegerGreaterOrEqualThan($column, $value);
+        }
+        if ($rule === ProcessRule::lowerThan) {
+            return $this->andIntegerLowerThan($column, $value);
+        }
+        if ($rule === ProcessRule::lowerOrEqualThan) {
+            return $this->andIntegerLowerOrEqualThan($column, $value);
+        }
+        if ($rule === ProcessRule::in) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            return $this->andIntegerIn($column, $value);
+        }
+        if ($rule === ProcessRule::notIn) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            return $this->andIntegerNotIn($column, $value);
+        }
         return $this;
     }
 }

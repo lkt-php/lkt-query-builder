@@ -7,6 +7,7 @@ class IntegerGreaterOrEqualThanConstraint extends AbstractConstraint
     public function __toString(): string
     {
         $v = addslashes(stripslashes((int)$this->value));
-        return "{$this->column}>={$v}";
+        $prepend = $this->getTablePrepend();
+        return "{$prepend}{$this->column}>={$v}";
     }
 }

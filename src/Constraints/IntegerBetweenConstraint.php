@@ -11,6 +11,7 @@ class IntegerBetweenConstraint extends AbstractConstraint
         }
         $values = array_map(function($v){ return addslashes(stripslashes((int)$v));}, $this->value);
 
-        return "{$this->column} BETWEEN '{$values[0]}' AND '{$values[1]}'";
+        $prepend = $this->getTablePrepend();
+        return "{$prepend}{$this->column} BETWEEN '{$values[0]}' AND '{$values[1]}'";
     }
 }

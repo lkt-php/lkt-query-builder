@@ -9,7 +9,8 @@ class DatetimeEqualConstraint extends AbstractConstraint
         $column = $this->column;
         $value = $this->value;
 
+        $prepend = $this->getTablePrepend();
         $v = addslashes(stripslashes($value));
-        return "{$column} = '{$v}'";
+        return "{$prepend}{$column} = '{$v}'";
     }
 }

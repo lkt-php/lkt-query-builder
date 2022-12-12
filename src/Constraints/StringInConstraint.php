@@ -12,6 +12,7 @@ class StringInConstraint extends AbstractConstraint
         $values = array_map(function($v){ return addslashes(stripslashes($v));}, $this->value);
         $value = "('".implode("','", $values)."')";
 
-        return "{$this->column} IN {$value}";
+        $prepend = $this->getTablePrepend();
+        return "{$prepend}{$this->column} IN {$value}";
     }
 }

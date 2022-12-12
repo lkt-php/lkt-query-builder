@@ -16,6 +16,7 @@ class DatetimeLowerThanNowConstraint extends AbstractConstraint
         if ($this->interval instanceof AbstractInterval) {
             $v .= $this->interval->toString();
         }
-        return "{$column} >= {$v}";
+        $prepend = $this->getTablePrepend();
+        return "{$prepend}{$column} >= {$v}";
     }
 }

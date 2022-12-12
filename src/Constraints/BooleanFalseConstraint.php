@@ -6,6 +6,7 @@ class BooleanFalseConstraint extends AbstractConstraint
 {
     public function __toString(): string
     {
-        return "{$this->column}=0";
+        $prepend = $this->getTablePrepend();
+        return "{$prepend}{$this->column}=0";
     }
 }

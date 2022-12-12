@@ -9,8 +9,9 @@ class DatetimeBetweenConstraint extends AbstractConstraint
         if (count($this->value) < 2) {
             return '';
         }
+        $prepend = $this->getTablePrepend();
         $values = array_map(function($v){ return addslashes(stripslashes($v));}, $this->value);
 
-        return "{$this->column} BETWEEN '{$values[0]}' AND '{$values[1]}'";
+        return "{$prepend}{$this->column} BETWEEN '{$values[0]}' AND '{$values[1]}'";
     }
 }

@@ -12,6 +12,7 @@ class Query
 
     protected $columns = [];
     protected $table = '';
+    protected $tableAlias = '';
     protected $where = [];
     protected $data = [];
 
@@ -78,6 +79,16 @@ class Query
     final protected function setTable(string $table): self
     {
         $this->table = $table;
+        return $this;
+    }
+
+    /**
+     * @param string $alias
+     * @return $this
+     */
+    final public function setTableAlias(string $alias): self
+    {
+        $this->tableAlias = $alias;
         return $this;
     }
 
@@ -246,6 +257,16 @@ class Query
     public function getTable(): string
     {
         return $this->table;
+    }
+
+    public function getTableAlias(): string
+    {
+        return $this->tableAlias;
+    }
+
+    public function hasTableAlias(): bool
+    {
+        return $this->tableAlias !== '';
     }
 
     /**

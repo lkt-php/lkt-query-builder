@@ -5,6 +5,8 @@ namespace Lkt\QueryBuilding\Constraints;
 abstract class AbstractConstraint
 {
     protected $column = '';
+    protected $table = '';
+    protected $tableAlias = '';
     protected $value = null;
     protected $settings = [];
 
@@ -21,4 +23,24 @@ abstract class AbstractConstraint
     }
 
     abstract public function __toString(): string;
+
+    public function setTable(string $table, string $alias = '')
+    {
+        $this->table = $table;
+        $this->tableAlias = $alias;
+        return $this;
+    }
+
+    protected function getTablePrepend(): string
+    {
+        $alias = trim($this->tableAlias);
+        if ($alias !== '') {
+            return "{$alias}.";
+        }
+        $table = trim($this->table);
+        if ($table !== '') {
+            return "{$table}.";
+        }
+        return '';
+    }
 }

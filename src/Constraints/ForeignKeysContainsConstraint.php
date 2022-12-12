@@ -11,10 +11,11 @@ class ForeignKeysContainsConstraint extends AbstractConstraint
 
         if ($v !== '') {
             $t = [];
-            $t[] = "{$key} LIKE '%;{$v};%'";
-            $t[] = "{$key} LIKE '%;{$v}'";
-            $t[] = "{$key} LIKE '{$v};%'";
-            $t[] = "{$key} = '{$v}'";
+            $prepend = $this->getTablePrepend();
+            $t[] = "{$prepend}{$key} LIKE '%;{$v};%'";
+            $t[] = "{$prepend}{$key} LIKE '%;{$v}'";
+            $t[] = "{$prepend}{$key} LIKE '{$v};%'";
+            $t[] = "{$prepend}{$key} = '{$v}'";
             return '(' . implode(' OR ', $t) . ')';
         }
         return '';

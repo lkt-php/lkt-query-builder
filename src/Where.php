@@ -10,6 +10,31 @@ class Where
     use WhereConstraints,
         WhereStaticConstraints;
 
+    protected $table = '';
+    protected $tableAlias = '';
+
+    public function setTable(string $value)
+    {
+        $this->table = $value;
+        return $this;
+    }
+
+    public function setTableAlias(string $value)
+    {
+        $this->tableAlias = $value;
+        return $this;
+    }
+
+    public function getTable(): bool
+    {
+        return $this->table;
+    }
+
+    public function getTableAlias(): bool
+    {
+        return $this->tableAlias;
+    }
+
     /**
      * @deprecated
      * @return static

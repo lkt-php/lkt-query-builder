@@ -10,6 +10,7 @@ class DatetimeNotConstraint extends AbstractConstraint
         $value = $this->value;
 
         $v = addslashes(stripslashes($value));
-        return "{$column} != '{$v}'";
+        $prepend = $this->getTablePrepend();
+        return "{$prepend}{$column} != '{$v}'";
     }
 }

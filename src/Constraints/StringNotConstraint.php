@@ -13,6 +13,7 @@ class StringNotConstraint extends AbstractConstraint
         }
 
         $v = addslashes(stripslashes($value));
-        return "{$column}!='{$v}'";
+        $prepend = $this->getTablePrepend();
+        return "{$prepend}{$column}!='{$v}'";
     }
 }
