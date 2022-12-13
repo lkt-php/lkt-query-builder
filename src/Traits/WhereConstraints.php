@@ -54,6 +54,7 @@ use Lkt\QueryBuilding\Constraints\StringNotConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotEndsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotInConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotLikeConstraint;
+use Lkt\QueryBuilding\Constraints\SubQueryCountEqualConstraint;
 use Lkt\QueryBuilding\DateIntervals\AbstractInterval;
 use Lkt\QueryBuilding\Enums\ProcessRule;
 use Lkt\QueryBuilding\Query;
@@ -73,6 +74,16 @@ trait WhereConstraints
                 $constraint->setTable($this->getTable(), $this->getTableAlias());
             }
             $r[] = (string)$constraint;
+        }
+
+
+        if ($this->hasJoinedBuilders()) {
+            foreach ($this->getJoinedBuilders() as $key => $joinedBuilder) {
+                $joinedWhereAux = trim($joinedBuilder->whereConstraintsToString());
+                if ($joinedWhereAux) {
+                    $r[] = $joinedWhereAux;
+                }
+            }
         }
 
         $or = [];

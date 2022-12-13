@@ -2,6 +2,7 @@
 
 namespace Lkt\QueryBuilding;
 
+use Lkt\Factory\Schemas\Schema;
 use Lkt\QueryBuilding\Traits\WhereConstraints;
 use Lkt\QueryBuilding\Traits\WhereStaticConstraints;
 
@@ -10,8 +11,15 @@ class Where
     use WhereConstraints,
         WhereStaticConstraints;
 
+    const COMPONENT = '';
+
     protected $table = '';
     protected $tableAlias = '';
+
+    final public function hasJoinedBuilders(): bool
+    {
+        return false;
+    }
 
     public function setTable(string $value)
     {
@@ -25,12 +33,28 @@ class Where
         return $this;
     }
 
-    public function getTable(): bool
+    public function getTable(): string
     {
-        return $this->table;
+        if ($this->table) {
+            return $this->table;
+        }
+
+        $r = '';
+        if (static::COMPONENT) {
+
+            try {
+                $schema = Schema::get(static::COMPONENT);
+                $r = $schema->getTable();
+
+            } catch (\Exception $e) {
+                $r = '';
+            }
+        }
+
+        return $r;
     }
 
-    public function getTableAlias(): bool
+    public function getTableAlias(): string
     {
         return $this->tableAlias;
     }

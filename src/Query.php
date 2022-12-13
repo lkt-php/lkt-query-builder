@@ -2,6 +2,7 @@
 
 namespace Lkt\QueryBuilding;
 
+use Lkt\QueryBuilding\Enums\JoinType;
 use Lkt\QueryBuilding\Helpers\ColumnHelper;
 use Lkt\QueryBuilding\Traits\WhereConstraints;
 use function Lkt\Tools\Arrays\implodeWithAND;
@@ -25,22 +26,31 @@ class Query
     protected $joins = [];
     protected $unions = [];
 
-    /**
-     * @param Query $builder
-     * @param string $alias
-     * @return $this
-     */
+    protected $joinedBuilders = [];
+    protected $joinedBuildersRelation = [];
+
+    final public function leftJoin(Query $query, $joinedBuilderColumn, $thisBuilderColumn): self
+    {
+        $k = $query->getJoinKey();
+        $this->joinedBuilders[$k] = $query;
+        $this->joinedBuildersRelation[$k] = [JoinType::left, $joinedBuilderColumn, $thisBuilderColumn];
+        return $this;
+    }
+
+    final public function rightJoin(Query $query, $joinedBuilderColumn, $thisBuilderColumn): self
+    {
+        $k = $query->getJoinKey();
+        $this->joinedBuilders[$k] = $query;
+        $this->joinedBuildersRelation[$k] = [JoinType::right, $joinedBuilderColumn, $thisBuilderColumn];
+        return $this;
+    }
+
     final public function union(Query $builder, string $alias): self
     {
         $this->unions[$alias] = $builder;
         return $this;
     }
 
-    /**
-     * @param int $page
-     * @param int $limit
-     * @return $this
-     */
     final public function pagination(int $page = 0, int $limit = 0): self
     {
         if ($page < 1) {
@@ -52,98 +62,59 @@ class Query
         return $this;
     }
 
-    /**
-     * @param string $orderBy
-     * @return $this
-     */
     final public function orderBy(string $orderBy): self
     {
         $this->orderBy = $orderBy;
         return $this;
     }
 
-    /**
-     * @param array $columns
-     * @return $this
-     */
     final public function setColumns(array $columns): self
     {
         $this->columns = $columns;
         return $this;
     }
 
-    /**
-     * @param string $table
-     * @return $this
-     */
     final protected function setTable(string $table): self
     {
         $this->table = $table;
         return $this;
     }
 
-    /**
-     * @param string $alias
-     * @return $this
-     */
     final public function setTableAlias(string $alias): self
     {
         $this->tableAlias = $alias;
         return $this;
     }
 
-    /**
-     * @param string $table
-     * @return static
-     */
     public static function table(string $table): self
     {
         return (new static())->setTable($table);
     }
 
-    /**
-     * @param array $data
-     * @return $this
-     */
     final public function updateData(array $data): self
     {
         $this->data = $data;
         return $this;
     }
 
-    /**
-     * @param Where $where
-     * @return $this
-     */
     final public function where(Where $where): self
     {
         $this->and[] = $where;
         return $this;
     }
 
-    /**
-     * @param string $where
-     * @return $this
-     */
     final public function constraint(string $where): self
     {
         $this->constraints[] = $where;
         return $this;
     }
 
-    /**
-     * @param Join $join
-     * @return $this
-     */
     final public function join(Join $join): self
     {
         $this->joins[] = $join;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getQueryWhere(): string
     {
         $where = [];
@@ -166,9 +137,6 @@ class Query
     }
 
     /**
-     * @param string $type
-     * @param string $countableField
-     * @return string
      * @deprecated
      */
     protected function getQuery(string $type, string $countableField = ''): string
@@ -238,7 +206,6 @@ class Query
     }
 
     /**
-     * @return string
      * @deprecated
      */
     private function buildColumns(): string
@@ -251,9 +218,6 @@ class Query
         return implode(',', $r);
     }
 
-    /**
-     * @return string
-     */
     public function getTable(): string
     {
         return $this->table;
@@ -269,73 +233,101 @@ class Query
         return $this->tableAlias !== '';
     }
 
-    /**
-     * @return array
-     */
+    public function getJoinKey(): string
+    {
+        if ($this->hasTableAlias()) {
+            return $this->getTableAlias();
+        }
+        return $this->getTable();
+    }
+
+    public function hasJoinedBuilders(): bool
+    {
+        return count($this->joinedBuilders) > 0;
+    }
+
+    public function getJoinedBuilders(): array
+    {
+        return $this->joinedBuilders;
+    }
+
+    public function getJoinedBuildersRelations(): array
+    {
+        return $this->joinedBuildersRelation;
+    }
+
+    public function getJoinedBuildersRelation(string $key): ?array
+    {
+        return $this->joinedBuildersRelation[$key];
+    }
+
+    public function getJoinString(string $joinType, $joinedColumn, $otherBuilderColumn): string
+    {
+        $additional = '';
+        if ($this->hasJoinedBuilders()) {
+            foreach ($this->getJoinedBuilders() as $key => $joinedBuilder) {
+                $joinData = $this->getJoinedBuildersRelation($key);
+                $additional .= $joinedBuilder->getJoinString($joinData[0], $joinData[1], $this->formatJoinedColumn($joinData[2]));
+            }
+        }
+
+        $_joinType = strtoupper($joinType);
+        $table = $this->getTable();
+        if (is_string($joinedColumn)) {
+            $joinedColumn = "{$table}.{$joinedColumn}";
+        }
+        return "{$_joinType} JOIN {$table} ON ({$joinedColumn} = {$otherBuilderColumn}) {$additional}";
+    }
+
+    public function formatJoinedColumn($joinedColumn)
+    {
+        if (is_string($joinedColumn)) {
+            $table = $this->getTable();
+            return "{$table}.{$joinedColumn}";
+        }
+        return $joinedColumn;
+    }
+
     public function getJoins(): array
     {
         return $this->joins;
     }
 
-    /**
-     * @return bool
-     */
     public function hasOrder(): bool
     {
         return $this->orderBy !== '';
     }
 
-    /**
-     * @return string
-     */
     public function getOrder(): string
     {
         return $this->orderBy;
     }
 
-    /**
-     * @return bool
-     */
     public function hasPagination(): bool
     {
         return $this->page > -1 && $this->limit > -1;
     }
 
-    /**
-     * @return bool
-     */
     public function hasLimit(): bool
     {
         return $this->limit > -1;
     }
 
-    /**
-     * @return int
-     */
     public function getPage(): int
     {
         return $this->page;
     }
 
-    /**
-     * @return int
-     */
     public function getLimit(): int
     {
         return $this->limit;
     }
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         return $this->data;
     }
 
-    /**
-     * @return array
-     */
     public function getColumns(): array
     {
         return $this->columns;
