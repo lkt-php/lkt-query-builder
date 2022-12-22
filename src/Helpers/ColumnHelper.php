@@ -13,7 +13,7 @@ class ColumnHelper
         $key = trim($exploded[0]);
         $alias = isset($exploded[1]) ? trim($exploded[1]) : '';
 
-        if (strpos($column, 'UNCOMPRESS') === 0) {
+        if (str_starts_with($column, 'UNCOMPRESS')) {
             if ($alias !== '') {
                 $r = "{$key} AS {$alias}";
             } else {
@@ -21,7 +21,7 @@ class ColumnHelper
             }
         }
 
-        elseif (strpos($key, $prependTable) === 0) {
+        elseif (str_starts_with($key, $prependTable)) {
             if ($alias !== '') {
                 $r = "{$key} AS {$alias}";
             } else {
@@ -43,7 +43,7 @@ class ColumnHelper
         $r = [];
         foreach ($params as $field => $value) {
             $v = addslashes(stripslashes($value));
-            if (strpos($value, 'COMPRESS(') === 0){
+            if (str_starts_with($value, 'COMPRESS(')){
                 $r[] = "`{$field}`={$value}";
             } else {
                 $r[] = "`{$field}`='{$v}'";

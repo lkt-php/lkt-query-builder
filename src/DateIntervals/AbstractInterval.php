@@ -4,7 +4,7 @@ namespace Lkt\QueryBuilding\DateIntervals;
 
 abstract class AbstractInterval
 {
-    protected $amount = 0;
+    protected int $amount = 0;
 
     public function __construct(int $amount)
     {
@@ -21,7 +21,7 @@ abstract class AbstractInterval
         return $this->amount > 0;
     }
 
-    public static function define(int $amount = 0)
+    public static function define(int $amount = 0): static
     {
         return new static($amount);
     }

@@ -4,11 +4,11 @@ namespace Lkt\QueryBuilding\Constraints;
 
 abstract class AbstractConstraint
 {
-    protected $column = '';
-    protected $table = '';
-    protected $tableAlias = '';
+    protected string $column = '';
+    protected string $table = '';
+    protected string $tableAlias = '';
     protected $value = null;
-    protected $settings = [];
+    protected array $settings = [];
 
     public function __construct(string $column, $value = null, array $settings = [])
     {
@@ -17,14 +17,14 @@ abstract class AbstractConstraint
         $this->settings = $settings;
     }
 
-    public static function define(string $column, $value = null, array $settings = [])
+    public static function define(string $column, $value = null, array $settings = []): static
     {
         return new static($column, $value, $settings);
     }
 
     abstract public function __toString(): string;
 
-    public function setTable(string $table, string $alias = '')
+    public function setTable(string $table, string $alias = ''): static
     {
         $this->table = $table;
         $this->tableAlias = $alias;

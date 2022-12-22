@@ -11,25 +11,25 @@ class Query
 {
     use WhereConstraints;
 
-    protected $columns = [];
-    protected $table = '';
-    protected $tableAlias = '';
-    protected $where = [];
-    protected $data = [];
+    protected array $columns = [];
+    protected string $table = '';
+    protected string $tableAlias = '';
+    protected array $where = [];
+    protected array $data = [];
 
-    protected $constraints = [];
-    protected $orderBy = '';
+    protected array $constraints = [];
+    protected string $orderBy = '';
 
-    protected $page = -1;
-    protected $limit = -1;
+    protected int $page = -1;
+    protected int $limit = -1;
 
-    protected $joins = [];
-    protected $unions = [];
+    protected array $joins = [];
+    protected array $unions = [];
 
-    protected $joinedBuilders = [];
-    protected $joinedBuildersRelation = [];
+    protected array $joinedBuilders = [];
+    protected array $joinedBuildersRelation = [];
 
-    final public function leftJoin(Query $query, $joinedBuilderColumn, $thisBuilderColumn): self
+    final public function leftJoin(Query $query, $joinedBuilderColumn, $thisBuilderColumn): static
     {
         $k = $query->getJoinKey();
         $this->joinedBuilders[$k] = $query;
@@ -37,7 +37,7 @@ class Query
         return $this;
     }
 
-    final public function rightJoin(Query $query, $joinedBuilderColumn, $thisBuilderColumn): self
+    final public function rightJoin(Query $query, $joinedBuilderColumn, $thisBuilderColumn): static
     {
         $k = $query->getJoinKey();
         $this->joinedBuilders[$k] = $query;
@@ -45,13 +45,13 @@ class Query
         return $this;
     }
 
-    final public function union(Query $builder, string $alias): self
+    final public function union(Query $builder, string $alias): static
     {
         $this->unions[$alias] = $builder;
         return $this;
     }
 
-    final public function pagination(int $page = 0, int $limit = 0): self
+    final public function pagination(int $page = 0, int $limit = 0): static
     {
         if ($page < 1) {
             $page = 1;
@@ -62,54 +62,54 @@ class Query
         return $this;
     }
 
-    final public function orderBy(string $orderBy): self
+    final public function orderBy(string $orderBy): static
     {
         $this->orderBy = $orderBy;
         return $this;
     }
 
-    final public function setColumns(array $columns): self
+    final public function setColumns(array $columns): static
     {
         $this->columns = $columns;
         return $this;
     }
 
-    final protected function setTable(string $table): self
+    final protected function setTable(string $table): static
     {
         $this->table = $table;
         return $this;
     }
 
-    final public function setTableAlias(string $alias): self
+    final public function setTableAlias(string $alias): static
     {
         $this->tableAlias = $alias;
         return $this;
     }
 
-    public static function table(string $table): self
+    public static function table(string $table): static
     {
         return (new static())->setTable($table);
     }
 
-    final public function updateData(array $data): self
+    final public function updateData(array $data): static
     {
         $this->data = $data;
         return $this;
     }
 
-    final public function where(Where $where): self
+    final public function where(Where $where): static
     {
         $this->and[] = $where;
         return $this;
     }
 
-    final public function constraint(string $where): self
+    final public function constraint(string $where): static
     {
         $this->constraints[] = $where;
         return $this;
     }
 
-    final public function join(Join $join): self
+    final public function join(Join $join): static
     {
         $this->joins[] = $join;
         return $this;
