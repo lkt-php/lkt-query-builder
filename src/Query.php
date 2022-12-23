@@ -4,12 +4,14 @@ namespace Lkt\QueryBuilding;
 
 use Lkt\QueryBuilding\Enums\JoinType;
 use Lkt\QueryBuilding\Helpers\ColumnHelper;
+use Lkt\QueryBuilding\Traits\PaginationTrait;
 use Lkt\QueryBuilding\Traits\WhereConstraints;
 use function Lkt\Tools\Arrays\implodeWithAND;
 
 class Query
 {
-    use WhereConstraints;
+    use WhereConstraints,
+        PaginationTrait;
 
     protected array $columns = [];
     protected string $table = '';
@@ -19,9 +21,6 @@ class Query
 
     protected array $constraints = [];
     protected string $orderBy = '';
-
-    protected int $page = -1;
-    protected int $limit = -1;
 
     protected array $joins = [];
     protected array $unions = [];
@@ -45,20 +44,12 @@ class Query
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     final public function union(Query $builder, string $alias): static
     {
         $this->unions[$alias] = $builder;
-        return $this;
-    }
-
-    final public function pagination(int $page = 0, int $limit = 0): static
-    {
-        if ($page < 1) {
-            $page = 1;
-        }
-        --$page;
-        $this->page = $page;
-        $this->limit = $limit;
         return $this;
     }
 
@@ -164,18 +155,10 @@ class Query
                 if ($type === 'select') {
                     $columns = $this->buildColumns();
                     $orderBy = '';
-                    $pagination = '';
+                    $pagination = $this->getPaginationString();
 
                     if ($this->orderBy !== '') {
                         $orderBy = " ORDER BY {$this->orderBy}";
-                    }
-
-                    if ($this->page > -1 && $this->limit > -1) {
-                        $p = $this->page * $this->limit;
-                        $pagination = " LIMIT {$p}, {$this->limit}";
-
-                    } elseif ($this->limit > -1) {
-                        $pagination = " LIMIT {$this->limit}";
                     }
 
 
@@ -301,16 +284,6 @@ class Query
     public function getOrder(): string
     {
         return $this->orderBy;
-    }
-
-    public function hasPagination(): bool
-    {
-        return $this->page > -1 && $this->limit > -1;
-    }
-
-    public function hasLimit(): bool
-    {
-        return $this->limit > -1;
     }
 
     public function getPage(): int
