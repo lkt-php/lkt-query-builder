@@ -229,6 +229,9 @@ class Query
         return count($this->joinedBuilders) > 0;
     }
 
+    /**
+     * @return static[]
+     */
     public function getJoinedBuilders(): array
     {
         return $this->joinedBuilders;
@@ -244,6 +247,22 @@ class Query
         return $this->joinedBuildersRelation[$key];
     }
 
+    public function getTableNameOrAlias(): string
+    {
+        if ($this->hasTableAlias()) {
+            return $this->getTableAlias();
+        }
+        return $this->getTable();
+    }
+
+    public function getTableNameWithAlias(): string
+    {
+        if ($this->hasTableAlias()) {
+            return "{$this->getTable()} AS {$this->getTableAlias()}";
+        }
+        return $this->getTable();
+    }
+
     public function getJoinString(string $joinType, $joinedColumn, $otherBuilderColumn): string
     {
         $additional = '';
@@ -255,17 +274,15 @@ class Query
         }
 
         $_joinType = strtoupper($joinType);
-        $table = $this->getTable();
-        if (is_string($joinedColumn)) {
-            $joinedColumn = "{$table}.{$joinedColumn}";
-        }
+        $joinedColumn = $this->formatJoinedColumn($joinedColumn);
+        $table = $this->getTableNameWithAlias();
         return "{$_joinType} JOIN {$table} ON ({$joinedColumn} = {$otherBuilderColumn}) {$additional}";
     }
 
     public function formatJoinedColumn($joinedColumn)
     {
         if (is_string($joinedColumn)) {
-            $table = $this->getTable();
+            $table = $this->getTableNameOrAlias();
             return "{$table}.{$joinedColumn}";
         }
         return $joinedColumn;
