@@ -2,6 +2,8 @@
 
 namespace Lkt\QueryBuilding\Traits;
 
+use Lkt\Factory\Schemas\Fields\AbstractField;
+use Lkt\Factory\Schemas\Schema;
 use Lkt\QueryBuilding\Constraints\AbstractConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanFalseConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanTrueConstraint;
@@ -31,6 +33,7 @@ use Lkt\QueryBuilding\Constraints\DecimalLowerOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalLowerThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalNotConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalNotInConstraint;
+use Lkt\QueryBuilding\Constraints\FieldEqualToFieldConstraint;
 use Lkt\QueryBuilding\Constraints\ForeignKeysContainsConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerEqualConstraint;
@@ -797,6 +800,50 @@ trait WhereConstraints
         $column = '(' . $builder->getSelectQuery() . ')';
         $v = addslashes(stripslashes($value));
         $this->or[] = "{$v} IN ({$column})";
+        return $this;
+    }
+
+    public function andFieldEqualToField(string $field, string $remoteSchema, string $remoteField): static
+    {
+        $schema = Schema::get($remoteSchema);
+        $remoteFieldAux = $schema->getField($remoteField);
+
+        $tmp = [];
+        $table = $schema->getTable();
+        if ($table) {
+            $tmp[] = $table;
+        }
+        if ($remoteFieldAux instanceof AbstractField) {
+            $tmp[] = $remoteFieldAux->getColumn();
+        } else {
+            $tmp[] = $remoteField;
+        }
+
+        $tmp = implode('.', $tmp);
+
+        $this->and[] = FieldEqualToFieldConstraint::define($field, $tmp);
+        return $this;
+    }
+
+    public function orFieldEqualToField(string $field, string $remoteSchema, string $remoteField): static
+    {
+        $schema = Schema::get($remoteSchema);
+        $remoteFieldAux = $schema->getField($remoteField);
+
+        $tmp = [];
+        $table = $schema->getTable();
+        if ($table) {
+            $tmp[] = $table;
+        }
+        if ($remoteFieldAux instanceof AbstractField) {
+            $tmp[] = $remoteFieldAux->getColumn();
+        } else {
+            $tmp[] = $remoteField;
+        }
+
+        $tmp = implode('.', $tmp);
+
+        $this->or[] = FieldEqualToFieldConstraint::define($field, $tmp);
         return $this;
     }
 
