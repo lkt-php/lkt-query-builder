@@ -11,6 +11,6 @@ class FieldEqualToFieldConstraint extends AbstractConstraint
 
         $v = addslashes(stripslashes($value));
         $prepend = $this->getTablePrepend();
-        return "{$prepend}{$column}='{$v}'";
+        return "{$prepend}{$column}={$v}";
     }
 }
