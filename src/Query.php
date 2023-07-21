@@ -4,23 +4,21 @@ namespace Lkt\QueryBuilding;
 
 use Lkt\QueryBuilding\Enums\JoinType;
 use Lkt\QueryBuilding\Helpers\ColumnHelper;
+use Lkt\QueryBuilding\Traits\OrderByTrait;
 use Lkt\QueryBuilding\Traits\PaginationTrait;
 use Lkt\QueryBuilding\Traits\WhereConstraints;
-use function Lkt\Tools\Arrays\implodeWithAND;
 
 class Query
 {
     use WhereConstraints,
-        PaginationTrait;
+        PaginationTrait,
+        OrderByTrait;
 
     protected array $columns = [];
     protected string $table = '';
     protected string $tableAlias = '';
     protected array $where = [];
     protected array $data = [];
-
-    protected array $constraints = [];
-    protected string $orderBy = '';
 
     protected array $joins = [];
     protected array $unions = [];
@@ -50,12 +48,6 @@ class Query
     final public function union(Query $builder, string $alias): static
     {
         $this->unions[$alias] = $builder;
-        return $this;
-    }
-
-    final public function orderBy(string $orderBy): static
-    {
-        $this->orderBy = $orderBy;
         return $this;
     }
 
@@ -106,27 +98,6 @@ class Query
         return $this;
     }
 
-    public function getQueryWhere(): string
-    {
-        $where = [];
-
-        $whereConstraints = $this->whereConstraintsToString();
-        if ($whereConstraints !== '') {
-            $where[] = $whereConstraints;
-        }
-
-        foreach ($this->constraints as $value) {
-            $where[] = $value;
-        }
-
-        $whereString = '';
-        if (isset($where[0])) {
-            $whereString = ' AND ' . implodeWithAND($where);
-        }
-
-        return $whereString;
-    }
-
     /**
      * @deprecated
      */
@@ -157,8 +128,8 @@ class Query
                     $orderBy = '';
                     $pagination = $this->getPaginationString();
 
-                    if ($this->orderBy !== '') {
-                        $orderBy = " ORDER BY {$this->orderBy}";
+                    if ($this->hasOrder()) {
+                        $orderBy = " ORDER BY {$this->getOrder()}";
                     }
 
 
@@ -291,16 +262,6 @@ class Query
     public function getJoins(): array
     {
         return $this->joins;
-    }
-
-    public function hasOrder(): bool
-    {
-        return $this->orderBy !== '';
-    }
-
-    public function getOrder(): string
-    {
-        return $this->orderBy;
     }
 
     public function getPage(): int

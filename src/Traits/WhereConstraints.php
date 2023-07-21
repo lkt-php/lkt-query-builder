@@ -62,11 +62,36 @@ use Lkt\QueryBuilding\DateIntervals\AbstractInterval;
 use Lkt\QueryBuilding\Enums\ProcessRule;
 use Lkt\QueryBuilding\Query;
 use Lkt\QueryBuilding\Where;
+use function Lkt\Tools\Arrays\implodeWithAND;
 
 trait WhereConstraints
 {
-    protected $or = [];
-    protected $and = [];
+    protected array $or = [];
+    protected array $and = [];
+
+    protected array $constraints = [];
+
+
+    public function getQueryWhere(): string
+    {
+        $where = [];
+
+        $whereConstraints = $this->whereConstraintsToString();
+        if ($whereConstraints !== '') {
+            $where[] = $whereConstraints;
+        }
+
+        foreach ($this->constraints as $value) {
+            $where[] = $value;
+        }
+
+        $whereString = '';
+        if (isset($where[0])) {
+            $whereString = ' AND ' . implodeWithAND($where);
+        }
+
+        return $whereString;
+    }
 
     public function whereConstraintsToString(): string
     {
@@ -80,7 +105,7 @@ trait WhereConstraints
         }
 
 
-        if ($this->hasJoinedBuilders()) {
+        if (method_exists($this, 'hasJoinedBuilders') && $this->hasJoinedBuilders()) {
             foreach ($this->getJoinedBuilders() as $key => $joinedBuilder) {
                 $joinedWhereAux = trim($joinedBuilder->whereConstraintsToString());
                 if ($joinedWhereAux) {

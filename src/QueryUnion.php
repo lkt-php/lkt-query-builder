@@ -2,16 +2,17 @@
 
 namespace Lkt\QueryBuilding;
 
+use Lkt\QueryBuilding\Traits\OrderByTrait;
 use Lkt\QueryBuilding\Traits\PaginationTrait;
 use Lkt\QueryBuilding\Traits\WhereConstraints;
 
 class QueryUnion
 {
     use PaginationTrait,
-        WhereConstraints;
+        WhereConstraints,
+        OrderByTrait;
 
     protected array $builders = [];
-    protected string $orderBy = '';
 
     protected string $table = 't';
     protected string $select = '*';
@@ -24,12 +25,6 @@ class QueryUnion
     public function addQuery(Query $query): static
     {
         $this->builders[] = $query;
-        return $this;
-    }
-
-    final public function orderBy(string $orderBy): static
-    {
-        $this->orderBy = $orderBy;
         return $this;
     }
 
@@ -60,10 +55,11 @@ class QueryUnion
 
         $query = '(' . implode(') UNION (', $queries) . ')';
 
-        $query = "SELECT {$this->select} FROM ($query) as {$this->table}";
+        $whereString = $this->getQueryWhere();
+        $query = "SELECT {$this->select} FROM ($query) as {$this->table} {$whereString}";
 
-        if ($this->orderBy !== '') {
-            $query .= " ORDER BY {$this->orderBy}";
+        if ($this->hasOrder()) {
+            $query .= " ORDER BY {$this->getOrder()}";
         }
         $pagination = $this->getPaginationString();
 
