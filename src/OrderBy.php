@@ -38,6 +38,11 @@ class OrderBy
         return implode(', ', $r);
     }
 
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
     public function andASC(string $field): static
     {
         $this->data[] = [$field, true];

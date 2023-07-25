@@ -2,17 +2,30 @@
 
 namespace Lkt\QueryBuilding;
 
+use Lkt\DatabaseConnectors\DatabaseConnections;
+use Lkt\Factory\Schemas\Schema;
+use Lkt\QueryBuilding\Constraints\FieldInSubQueryConstraint;
+use Lkt\QueryBuilding\Constraints\FieldNotInSubQueryConstraint;
+use Lkt\QueryBuilding\Constraints\SubQueryCountEqualConstraint;
 use Lkt\QueryBuilding\Enums\JoinType;
-use Lkt\QueryBuilding\Helpers\ColumnHelper;
+use Lkt\QueryBuilding\Traits\GroupByTrait;
 use Lkt\QueryBuilding\Traits\OrderByTrait;
 use Lkt\QueryBuilding\Traits\PaginationTrait;
 use Lkt\QueryBuilding\Traits\WhereConstraints;
+use function Lkt\Tools\Pagination\getTotalPages;
 
 class Query
 {
     use WhereConstraints,
         PaginationTrait,
-        OrderByTrait;
+        OrderByTrait,
+        GroupByTrait;
+
+
+    const COMPONENT = null;
+
+    protected string $connector = '';
+    protected bool $forceRefresh = false;
 
     protected array $columns = [];
     protected string $table = '';
@@ -96,80 +109,6 @@ class Query
     {
         $this->joins[] = $join;
         return $this;
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function getQuery(string $type, string $countableField = ''): string
-    {
-        $whereString = $this->getQueryWhere();
-
-        switch ($type) {
-            case 'select':
-            case 'selectDistinct':
-            case 'count':
-                $from = [];
-                foreach ($this->joins as $join) {
-                    $from[] = (string)$join;
-                }
-                $fromString = implode(' ', $from);
-                $fromString = str_replace('{{---LKT_PARENT_TABLE---}}', $this->table, $fromString);
-
-                $distinct = '';
-
-                if ($type === 'selectDistinct') {
-                    $distinct = 'DISTINCT';
-                    $type = 'select';
-                }
-
-                if ($type === 'select') {
-                    $columns = $this->buildColumns();
-                    $orderBy = '';
-                    $pagination = $this->getPaginationString();
-
-                    if ($this->hasOrder()) {
-                        $orderBy = " ORDER BY {$this->getOrder()}";
-                    }
-
-
-                    return "SELECT {$distinct} {$columns} FROM {$this->table} {$fromString} WHERE 1 {$whereString} {$orderBy} {$pagination}";
-                }
-
-                if ($type === 'count') {
-                    return "SELECT COUNT({$countableField}) AS Count FROM {$this->table} {$fromString} WHERE 1 {$whereString}";
-                }
-                return '';
-
-            case 'update':
-            case 'insert':
-                $data = ColumnHelper::makeUpdateParams($this->data);
-
-                if ($type === 'update') {
-                    return "UPDATE {$this->table} SET {$data} WHERE 1 {$whereString}";
-                }
-
-                if ($type === 'insert') {
-                    return "INSERT INTO {$this->table} SET {$data}";
-                }
-                return '';
-
-            default:
-                return '';
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    private function buildColumns(): string
-    {
-        $r = [];
-        foreach ($this->columns as $column) {
-            $r[] = ColumnHelper::buildColumnString($column, $this->table);
-        }
-
-        return implode(',', $r);
     }
 
     public function getTable(): string
@@ -282,5 +221,262 @@ class Query
     public function getColumns(): array
     {
         return $this->columns;
+    }
+
+    /**
+     * @param bool $status
+     * @return $this
+     */
+    public function setForceRefresh(bool $status): static
+    {
+        $this->forceRefresh= $status;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setDatabaseConnector(string $name): static
+    {
+        $this->connector = $name;
+        return $this;
+    }
+
+    final public function select(): array
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        $r = $connection->query($this->getSelectQuery());
+
+        if (!is_array($r)) {
+            $r = [];
+        }
+        return $r;
+    }
+
+    final public function selectRaw(): array
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        $r = $connection->query($this->getSelectQuery());
+
+        if (!is_array($r)) {
+            $r = [];
+        }
+        return $r;
+    }
+
+    final public function selectDistinct(): array
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        return $connection->query($this->getSelectDistinctQuery());
+    }
+
+    final public function selectDistinctRaw(): array
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        $r = $connection->query($this->getSelectDistinctQuery());
+
+        if (!is_array($r)) {
+            $r = [];
+        }
+        return $r;
+    }
+
+    final public function count(string $countableField): int
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        $results = $connection->query($this->getCountQuery($countableField));
+        return (int)$results[0]['Count'];
+    }
+
+    final public function pages(string $countableField): int
+    {
+        return getTotalPages($this->count($countableField), $this->limit);
+    }
+
+    final public function insert(): bool
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        $connection->query($this->getInsertQuery());
+        return true;
+    }
+
+    final public function update(): bool
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        $connection->query($this->getUpdateQuery());
+        return true;
+    }
+
+    final public function delete(): bool
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        $connection->query($this->getDeleteQuery());
+        return true;
+    }
+
+    final public function extractSchemaColumns(Schema $schema)
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        if ($this->forceRefresh) {
+            $connection->forceRefreshNextQuery();
+        }
+        $this->setColumns($connection->extractSchemaColumns($schema));
+    }
+
+    final public function getSelectQuery(): string
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        return $connection->getSelectQuery($this);
+    }
+
+    final public function getSelectDistinctQuery(): string
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        return $connection->getSelectDistinctQuery($this);
+    }
+
+    final public function getCountQuery(string $countableField): string
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        return $connection->getCountQuery($this, $countableField);
+    }
+
+    final public function getInsertQuery(): string
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        return $connection->getInsertQuery($this);
+    }
+
+    final public function getUpdateQuery(): string
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        return $connection->getUpdateQuery($this);
+    }
+
+    final public function getDeleteQuery(): string
+    {
+        $connector = $this->connector;
+        if ($connector === '') {
+            $connector = DatabaseConnections::$defaultConnector;
+        }
+        $connection = DatabaseConnections::get($connector);
+        return $connection->getDeleteQuery($this);
+    }
+
+    final public function andSubQueryCountEqual(Query $query, int $value, string $countableField): static
+    {
+        $this->and[] = SubQueryCountEqualConstraint::define($query->getCountQuery($countableField), $value);
+        return $this;
+    }
+
+    final public function orSubQueryCountEqual(Query $query, int $value, string $countableField): static
+    {
+        $this->and[] = SubQueryCountEqualConstraint::define($query->getCountQuery($countableField), $value);
+        return $this;
+    }
+
+    final public function andFieldInSubQuery(string $value, Query $query): static
+    {
+        $this->and[] = FieldInSubQueryConstraint::define($value, $query->getSelectDistinctQuery());
+        return $this;
+    }
+
+    final public function orFieldInSubQuery(string $value, Query $query): static
+    {
+        $this->and[] = FieldInSubQueryConstraint::define($value, $query->getSelectDistinctQuery());
+        return $this;
+    }
+
+    final public function andFieldNotInSubQuery(string $value, Query $query): static
+    {
+        $this->and[] = FieldNotInSubQueryConstraint::define($value, $query->getSelectDistinctQuery());
+        return $this;
+    }
+
+    final public function orFieldNotInSubQuery(string $value, Query $query): static
+    {
+        $this->and[] = FieldNotInSubQueryConstraint::define($value, $query->getSelectDistinctQuery());
+        return $this;
     }
 }
