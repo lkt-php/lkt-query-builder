@@ -2,7 +2,7 @@
 
 namespace Lkt\QueryBuilding;
 
-use Lkt\DatabaseConnectors\DatabaseConnections;
+use Lkt\Connectors\DatabaseConnections;
 use Lkt\Factory\Schemas\Schema;
 use Lkt\QueryBuilding\Constraints\FieldInSubQueryConstraint;
 use Lkt\QueryBuilding\Constraints\FieldNotInSubQueryConstraint;

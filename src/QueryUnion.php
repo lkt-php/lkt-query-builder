@@ -2,7 +2,7 @@
 
 namespace Lkt\QueryBuilding;
 
-use Lkt\DatabaseConnectors\DatabaseConnections;
+use Lkt\Connectors\DatabaseConnections;
 use Lkt\QueryBuilding\Constraints\SubQueryCountEqualConstraint;
 use Lkt\QueryBuilding\Traits\GroupByTrait;
 use Lkt\QueryBuilding\Traits\OrderByTrait;
