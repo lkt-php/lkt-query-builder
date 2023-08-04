@@ -27,7 +27,7 @@ class Query
     protected string $connector = '';
     protected bool $forceRefresh = false;
 
-    protected array $columns = [];
+    protected SelectBuilder|array $columns = [];
     protected string $table = '';
     protected string $tableAlias = '';
     protected array $where = [];
@@ -64,7 +64,7 @@ class Query
         return $this;
     }
 
-    final public function setColumns(array $columns): static
+    final public function setColumns(SelectBuilder|array $columns): static
     {
         $this->columns = $columns;
         return $this;
@@ -220,6 +220,7 @@ class Query
 
     public function getColumns(): array
     {
+        if ($this->columns instanceof SelectBuilder) return $this->columns->getFields();
         return $this->columns;
     }
 
@@ -371,7 +372,7 @@ class Query
         return true;
     }
 
-    final public function extractSchemaColumns(Schema $schema)
+    final public function extractSchemaColumns(Schema $schema): static
     {
         $connector = $this->connector;
         if ($connector === '') {
@@ -382,6 +383,7 @@ class Query
             $connection->forceRefreshNextQuery();
         }
         $this->setColumns($connection->extractSchemaColumns($schema));
+        return $this;
     }
 
     final public function getSelectQuery(): string
