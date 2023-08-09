@@ -8,7 +8,7 @@ class StringEqualConstraint extends AbstractConstraint
     {
         $column = $this->column;
         $value = $this->value;
-        if (strpos($value, 'COMPRESS(') === 0) {
+        if (str_starts_with($value, 'COMPRESS(')) {
             return "{$column}={$value}";
         }
 

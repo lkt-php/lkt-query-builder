@@ -2,6 +2,14 @@
 
 namespace Lkt\QueryBuilding\Traits;
 
+use Lkt\QueryBuilding\Constraints\ConcatBeginsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatEndsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatEqualConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatNotBeginsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatNotConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatNotEndsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatNotLikeConstraint;
 use Lkt\QueryBuilding\DateIntervals\AbstractInterval;
 
 trait WhereStaticConstraints
@@ -259,5 +267,53 @@ trait WhereStaticConstraints
     public static function stringNotLike(string $column, string $value)
     {
         return (new static())->andStringNotLike($column, $value);
+    }
+
+    public function concatEqual(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatEqualConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function concatLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function concatBeginsLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatBeginsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function concatEndsLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatEndsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function concatNot(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatNotConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function concatNotLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatNotLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function concatNotBeginsLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatNotBeginsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function concatNotEndsLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatNotEndsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
     }
 }

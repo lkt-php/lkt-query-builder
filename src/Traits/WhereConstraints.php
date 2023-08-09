@@ -7,6 +7,14 @@ use Lkt\Factory\Schemas\Schema;
 use Lkt\QueryBuilding\Constraints\AbstractConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanFalseConstraint;
 use Lkt\QueryBuilding\Constraints\BooleanTrueConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatBeginsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatEndsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatEqualConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatNotBeginsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatNotConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatNotEndsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\ConcatNotLikeConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeBeginsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\DatetimeEndsLikeConstraint;
@@ -101,7 +109,8 @@ trait WhereConstraints
             if ($constraint instanceof AbstractConstraint) {
                 $constraint->setTable($this->getTable(), $this->getTableAlias());
             }
-            $r[] = (string)$constraint;
+            $toAdd = (string)$constraint;
+            if ($toAdd !== '') $r[] = $toAdd;
         }
 
 
@@ -959,6 +968,102 @@ trait WhereConstraints
             }
             return $this->andIntegerNotIn($column, $value);
         }
+        return $this;
+    }
+
+    public function andConcatEqual(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatEqualConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function orConcatEqual(array $columns, string $separator, string $value): self
+    {
+        $this->or[] = ConcatEqualConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function andConcatLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function orConcatLike(array $columns, string $separator, string $value): self
+    {
+        $this->or[] = ConcatLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function andConcatBeginsLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatBeginsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function orConcatBeginsLike(array $columns, string $separator, string $value): self
+    {
+        $this->or[] = ConcatBeginsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function andConcatEndsLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatEndsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function orConcatEndsLike(array $columns, string $separator, string $value): self
+    {
+        $this->or[] = ConcatEndsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function andConcatNot(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatNotConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function orConcatNot(array $columns, string $separator, string $value): self
+    {
+        $this->or[] = ConcatNotConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function andConcatNotLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatNotLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function orConcatNotLike(array $columns, string $separator, string $value): self
+    {
+        $this->or[] = ConcatNotLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function andConcatNotBeginsLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatNotBeginsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function orConcatNotBeginsLike(array $columns, string $separator, string $value): self
+    {
+        $this->or[] = ConcatNotBeginsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function andConcatNotEndsLike(array $columns, string $separator, string $value): self
+    {
+        $this->and[] = ConcatNotEndsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function orConcatNotEndsLike(array $columns, string $separator, string $value): self
+    {
+        $this->or[] = ConcatNotEndsLikeConstraint::defineConcat($columns, $separator, $value);
         return $this;
     }
 }
