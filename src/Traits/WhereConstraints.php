@@ -43,6 +43,15 @@ use Lkt\QueryBuilding\Constraints\DecimalNotConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalNotInConstraint;
 use Lkt\QueryBuilding\Constraints\FieldEqualToFieldConstraint;
 use Lkt\QueryBuilding\Constraints\ForeignKeysContainsConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringBeginsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringEndsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringEqualConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringInConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringLikeConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringNotBeginsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringNotConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringNotEndsLikeConstraint;
+use Lkt\QueryBuilding\Constraints\I18nStringNotLikeConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerBetweenConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerEqualConstraint;
 use Lkt\QueryBuilding\Constraints\IntegerGreaterOrEqualThanConstraint;
@@ -252,6 +261,114 @@ trait WhereConstraints
     public function orStringIn(string $column, array $values): self
     {
         $this->or[] = StringInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function andI18nStringEqual(string $column, string $value): self
+    {
+        $this->and[] = I18nStringEqualConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orI18nStringEqual(string $column, string $value): self
+    {
+        $this->or[] = I18nStringEqualConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andI18nStringNot(string $column, string $value): self
+    {
+        $this->and[] = I18nStringNotConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orI18nStringNot(string $column, string $value): self
+    {
+        $this->or[] = I18nStringNotConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andI18nStringLike(string $column, string $value): self
+    {
+        $this->and[] = I18nStringLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orI18nStringLike(string $column, string $value): self
+    {
+        $this->or[] = I18nStringLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andI18nStringNotLike(string $column, string $value): self
+    {
+        $this->and[] = I18nStringNotLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orI18nStringNotLike(string $column, string $value): self
+    {
+        $this->or[] = I18nStringNotLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andI18nStringBeginsLike(string $column, string $value): self
+    {
+        $this->and[] = I18nStringBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orI18nStringBeginsLike(string $column, string $value): self
+    {
+        $this->or[] = I18nStringBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andI18nStringNotBeginsLike(string $column, string $value): self
+    {
+        $this->and[] = I18nStringNotBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orI18nStringNotBeginsLike(string $column, string $value): self
+    {
+        $this->or[] = I18nStringNotBeginsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andI18nStringEndsLike(string $column, string $value): self
+    {
+        $this->and[] = I18nStringEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orI18nStringEndsLike(string $column, string $value): self
+    {
+        $this->or[] = I18nStringEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andI18nStringNotEndsLike(string $column, string $value): self
+    {
+        $this->and[] = I18nStringNotEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orI18nStringNotEndsLike(string $column, string $value): self
+    {
+        $this->or[] = I18nStringNotEndsLikeConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function andI18nStringIn(string $column, array $values): self
+    {
+        $this->and[] = I18nStringInConstraint::define($column, $values);
+        return $this;
+    }
+
+    public function orI18nStringIn(string $column, array $values): self
+    {
+        $this->or[] = I18nStringInConstraint::define($column, $values);
         return $this;
     }
 

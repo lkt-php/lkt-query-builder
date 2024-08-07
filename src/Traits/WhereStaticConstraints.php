@@ -269,6 +269,56 @@ trait WhereStaticConstraints
         return (new static())->andStringNotLike($column, $value);
     }
 
+    public static function i18nStringBeginsLike(string $column, string $value)
+    {
+        return (new static())->andI18nStringBeginsLike($column, $value);
+    }
+
+    public static function i18nStringEndsLike(string $column, string $value)
+    {
+        return (new static())->andI18nStringEndsLike($column, $value);
+    }
+
+    public static function i18nStringEqual(string $column, string $value)
+    {
+        return (new static())->andI18nStringEqual($column, $value);
+    }
+
+    public static function i18nStringIn(string $column, array $value)
+    {
+        return (new static())->andI18nStringIn($column, $value);
+    }
+
+    public static function i18nStringLike(string $column, string $value)
+    {
+        return (new static())->andI18nStringLike($column, $value);
+    }
+
+    public static function i18nStringNotBeginsLike(string $column, string $value)
+    {
+        return (new static())->andI18nStringNotBeginsLike($column, $value);
+    }
+
+    public static function i18nStringNot(string $column, string $value)
+    {
+        return (new static())->andI18nStringNot($column, $value);
+    }
+
+    public static function i18nStringNotEndsLike(string $column, string $value)
+    {
+        return (new static())->andI18nStringNotEndsLike($column, $value);
+    }
+
+    public static function i18nStringNotIn(string $column, array $value)
+    {
+        return (new static())->andI18nStringNotIn($column, $value);
+    }
+
+    public static function i18nStringNotLike(string $column, string $value)
+    {
+        return (new static())->andI18nStringNotLike($column, $value);
+    }
+
     public function concatEqual(array $columns, string $separator, string $value): self
     {
         $this->and[] = ConcatEqualConstraint::defineConcat($columns, $separator, $value);
