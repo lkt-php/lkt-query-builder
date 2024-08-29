@@ -118,7 +118,7 @@ class Where
      * @param Where $builder
      * @return $this
      */
-    public function orWhere(Where $builder): self
+    public function orWhere(Where|callable $builder): self
     {
         $this->or[] = $builder;
         return $this;
@@ -128,7 +128,7 @@ class Where
      * @param Where $builder
      * @return $this
      */
-    public function andWhere(Where $builder): self
+    public function andWhere(Where|callable $builder): self
     {
         $this->and[] = $builder;
         return $this;

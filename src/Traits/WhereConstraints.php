@@ -115,10 +115,16 @@ trait WhereConstraints
         $r = [];
 
         foreach ($this->and as $constraint) {
+            $toAdd = '';
+
             if ($constraint instanceof AbstractConstraint) {
                 $constraint->setTable($this->getTable(), $this->getTableAlias());
+                $toAdd = (string)$constraint;
+
+            } elseif (is_callable($constraint)) {
+                $toAdd = call_user_func_array($constraint, []);
             }
-            $toAdd = (string)$constraint;
+
             if ($toAdd !== '') $r[] = $toAdd;
         }
 
@@ -134,10 +140,16 @@ trait WhereConstraints
 
         $or = [];
         foreach ($this->or as $constraint) {
+            $toAdd = '';
+
             if ($constraint instanceof AbstractConstraint) {
                 $constraint->setTable($this->getTable(), $this->getTableAlias());
+                $toAdd = (string)$constraint;
+            } elseif (is_callable($constraint)) {
+                $toAdd = call_user_func_array($constraint, []);
             }
-            $or[] = (string)$constraint;
+
+            if ($toAdd !== '') $or[] = $toAdd;
         }
 
         $data = [];
@@ -1002,7 +1014,7 @@ trait WhereConstraints
      * @param Where $where
      * @return $this
      */
-    final public function andWhere(Where $where): self
+    final public function andWhere(Where|callable $where): self
     {
         $this->and[] = $where;
         return $this;
@@ -1012,7 +1024,7 @@ trait WhereConstraints
      * @param Where $where
      * @return $this
      */
-    final public function orWhere(Where $where): self
+    final public function orWhere(Where|callable $where): self
     {
         $this->or[] = $where;
         return $this;
