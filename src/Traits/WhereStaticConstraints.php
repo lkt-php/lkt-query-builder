@@ -219,54 +219,54 @@ trait WhereStaticConstraints
         return (new static())->andRaw($value);
     }
 
-    public static function stringBeginsLike(string $column, string $value)
+    public static function stringBeginsLike(string $column, string $value, array $settings = [])
     {
-        return (new static())->andStringBeginsLike($column, $value);
+        return (new static())->andStringBeginsLike($column, $value, $settings);
     }
 
-    public static function stringEndsLike(string $column, string $value)
+    public static function stringEndsLike(string $column, string $value, array $settings = [])
     {
-        return (new static())->andStringEndsLike($column, $value);
+        return (new static())->andStringEndsLike($column, $value, $settings);
     }
 
-    public static function stringEqual(string $column, string $value)
+    public static function stringEqual(string $column, string $value, array $settings = [])
     {
-        return (new static())->andStringEqual($column, $value);
+        return (new static())->andStringEqual($column, $value, $settings);
     }
 
-    public static function stringIn(string $column, array $value)
+    public static function stringIn(string $column, array $value, array $settings = [])
     {
-        return (new static())->andStringIn($column, $value);
+        return (new static())->andStringIn($column, $value, $settings);
     }
 
-    public static function stringLike(string $column, string $value)
+    public static function stringLike(string $column, string $value, array $settings = [])
     {
-        return (new static())->andStringLike($column, $value);
+        return (new static())->andStringLike($column, $value, $settings);
     }
 
-    public static function stringNotBeginsLike(string $column, string $value)
+    public static function stringNotBeginsLike(string $column, string $value, array $settings = [])
     {
-        return (new static())->andStringNotBeginsLike($column, $value);
+        return (new static())->andStringNotBeginsLike($column, $value, $settings);
     }
 
-    public static function stringNot(string $column, string $value)
+    public static function stringNot(string $column, string $value, array $settings = [])
     {
-        return (new static())->andStringNot($column, $value);
+        return (new static())->andStringNot($column, $value, $settings);
     }
 
-    public static function stringNotEndsLike(string $column, string $value)
+    public static function stringNotEndsLike(string $column, string $value, array $settings = [])
     {
-        return (new static())->andStringNotEndsLike($column, $value);
+        return (new static())->andStringNotEndsLike($column, $value, $settings);
     }
 
-    public static function stringNotIn(string $column, array $value)
+    public static function stringNotIn(string $column, array $value, array $settings = [])
     {
-        return (new static())->andStringNotIn($column, $value);
+        return (new static())->andStringNotIn($column, $value, $settings);
     }
 
-    public static function stringNotLike(string $column, string $value)
+    public static function stringNotLike(string $column, string $value, array $settings = [])
     {
-        return (new static())->andStringNotLike($column, $value);
+        return (new static())->andStringNotLike($column, $value, $settings);
     }
 
     public static function i18nStringBeginsLike(string $column, string $value)

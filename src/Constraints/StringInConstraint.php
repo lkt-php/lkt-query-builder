@@ -13,6 +13,7 @@ class StringInConstraint extends AbstractConstraint
         $value = "('".implode("','", $values)."')";
 
         $prepend = $this->getTablePrepend();
+        if ($this->hasBinaryMode()) $prepend = "BINARY {$prepend}";
         return "{$prepend}{$this->column} IN {$value}";
     }
 }

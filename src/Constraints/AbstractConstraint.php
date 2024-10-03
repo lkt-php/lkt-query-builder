@@ -43,4 +43,9 @@ abstract class AbstractConstraint
         }
         return '';
     }
+
+    public function hasBinaryMode(): bool
+    {
+        return $this->settings['binary'] === true;
+    }
 }

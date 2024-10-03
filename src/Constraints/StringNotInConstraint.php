@@ -13,6 +13,7 @@ class StringNotInConstraint extends AbstractConstraint
         $value = "('".implode("','", $values)."')";
 
         $prepend = $this->getTablePrepend();
+        if ($this->hasBinaryMode()) $prepend = "BINARY {$prepend}";
         return "{$prepend}{$this->column} NOT IN {$value}";
     }
 }

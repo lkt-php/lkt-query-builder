@@ -14,6 +14,8 @@ class StringEqualConstraint extends AbstractConstraint
 
         $v = addslashes(stripslashes($value));
         $prepend = $this->getTablePrepend();
+
+        if ($this->hasBinaryMode()) $prepend = "BINARY {$prepend}";
         return "{$prepend}{$column}='{$v}'";
     }
 }

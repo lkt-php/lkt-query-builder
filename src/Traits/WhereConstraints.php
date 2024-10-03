@@ -168,111 +168,111 @@ trait WhereConstraints
         return '';
     }
 
-    public function andStringEqual(string $column, string $value): self
+    public function andStringEqual(string $column, string $value, array $settings = []): self
     {
-        $this->and[] = StringEqualConstraint::define($column, $value);
+        $this->and[] = StringEqualConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function orStringEqual(string $column, string $value): self
+    public function orStringEqual(string $column, string $value, array $settings = []): self
     {
-        $this->or[] = StringEqualConstraint::define($column, $value);
+        $this->or[] = StringEqualConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function andStringNot(string $column, string $value): self
+    public function andStringNot(string $column, string $value, array $settings = []): self
     {
-        $this->and[] = StringNotConstraint::define($column, $value);
+        $this->and[] = StringNotConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function orStringNot(string $column, string $value): self
+    public function orStringNot(string $column, string $value, array $settings = []): self
     {
-        $this->or[] = StringNotConstraint::define($column, $value);
+        $this->or[] = StringNotConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function andStringLike(string $column, string $value): self
+    public function andStringLike(string $column, string $value, array $settings = []): self
     {
-        $this->and[] = StringLikeConstraint::define($column, $value);
+        $this->and[] = StringLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function orStringLike(string $column, string $value): self
+    public function orStringLike(string $column, string $value, array $settings = []): self
     {
-        $this->or[] = StringLikeConstraint::define($column, $value);
+        $this->or[] = StringLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function andStringNotLike(string $column, string $value): self
+    public function andStringNotLike(string $column, string $value, array $settings = []): self
     {
-        $this->and[] = StringNotLikeConstraint::define($column, $value);
+        $this->and[] = StringNotLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function orStringNotLike(string $column, string $value): self
+    public function orStringNotLike(string $column, string $value, array $settings = []): self
     {
-        $this->or[] = StringNotLikeConstraint::define($column, $value);
+        $this->or[] = StringNotLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function andStringBeginsLike(string $column, string $value): self
+    public function andStringBeginsLike(string $column, string $value, array $settings = []): self
     {
-        $this->and[] = StringBeginsLikeConstraint::define($column, $value);
+        $this->and[] = StringBeginsLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function orStringBeginsLike(string $column, string $value): self
+    public function orStringBeginsLike(string $column, string $value, array $settings = []): self
     {
-        $this->or[] = StringBeginsLikeConstraint::define($column, $value);
+        $this->or[] = StringBeginsLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function andStringNotBeginsLike(string $column, string $value): self
+    public function andStringNotBeginsLike(string $column, string $value, array $settings = []): self
     {
-        $this->and[] = StringNotBeginsLikeConstraint::define($column, $value);
+        $this->and[] = StringNotBeginsLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function orStringNotBeginsLike(string $column, string $value): self
+    public function orStringNotBeginsLike(string $column, string $value, array $settings = []): self
     {
-        $this->or[] = StringNotBeginsLikeConstraint::define($column, $value);
+        $this->or[] = StringNotBeginsLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function andStringEndsLike(string $column, string $value): self
+    public function andStringEndsLike(string $column, string $value, array $settings = []): self
     {
-        $this->and[] = StringEndsLikeConstraint::define($column, $value);
+        $this->and[] = StringEndsLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function orStringEndsLike(string $column, string $value): self
+    public function orStringEndsLike(string $column, string $value, array $settings = []): self
     {
-        $this->or[] = StringEndsLikeConstraint::define($column, $value);
+        $this->or[] = StringEndsLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function andStringNotEndsLike(string $column, string $value): self
+    public function andStringNotEndsLike(string $column, string $value, array $settings = []): self
     {
-        $this->and[] = StringNotEndsLikeConstraint::define($column, $value);
+        $this->and[] = StringNotEndsLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function orStringNotEndsLike(string $column, string $value): self
+    public function orStringNotEndsLike(string $column, string $value, array $settings = []): self
     {
-        $this->or[] = StringNotEndsLikeConstraint::define($column, $value);
+        $this->or[] = StringNotEndsLikeConstraint::define($column, $value, $settings);
         return $this;
     }
 
-    public function andStringIn(string $column, array $values): self
+    public function andStringIn(string $column, array $values, array $settings = []): self
     {
-        $this->and[] = StringInConstraint::define($column, $values);
+        $this->and[] = StringInConstraint::define($column, $values, $settings);
         return $this;
     }
 
-    public function orStringIn(string $column, array $values): self
+    public function orStringIn(string $column, array $values, array $settings = []): self
     {
-        $this->or[] = StringInConstraint::define($column, $values);
+        $this->or[] = StringInConstraint::define($column, $values, $settings);
         return $this;
     }
 
