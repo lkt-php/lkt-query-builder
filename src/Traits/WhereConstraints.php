@@ -74,7 +74,6 @@ use Lkt\QueryBuilding\Constraints\StringNotConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotEndsLikeConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotInConstraint;
 use Lkt\QueryBuilding\Constraints\StringNotLikeConstraint;
-use Lkt\QueryBuilding\Constraints\SubQueryCountEqualConstraint;
 use Lkt\QueryBuilding\DateIntervals\AbstractInterval;
 use Lkt\QueryBuilding\Enums\ProcessRule;
 use Lkt\QueryBuilding\Query;
@@ -110,21 +109,25 @@ trait WhereConstraints
         return $whereString;
     }
 
+    protected function getConstraintString(AbstractConstraint|Where|callable $constraint): string
+    {
+        if ($constraint instanceof AbstractConstraint) {
+            $constraint->setTable($this->getTable(), $this->getTableAlias());
+            return (string)$constraint;
+        }
+
+        if ($constraint instanceof Where) return $constraint->whereConstraintsToString();
+        if (is_callable($constraint)) return call_user_func_array($constraint, []);
+
+        return '';
+    }
+
     public function whereConstraintsToString(): string
     {
         $r = [];
 
         foreach ($this->and as $constraint) {
-            $toAdd = '';
-
-            if ($constraint instanceof AbstractConstraint) {
-                $constraint->setTable($this->getTable(), $this->getTableAlias());
-                $toAdd = (string)$constraint;
-
-            } elseif (is_callable($constraint)) {
-                $toAdd = call_user_func_array($constraint, []);
-            }
-
+            $toAdd = $this->getConstraintString($constraint);
             if ($toAdd !== '') $r[] = $toAdd;
         }
 
@@ -140,15 +143,7 @@ trait WhereConstraints
 
         $or = [];
         foreach ($this->or as $constraint) {
-            $toAdd = '';
-
-            if ($constraint instanceof AbstractConstraint) {
-                $constraint->setTable($this->getTable(), $this->getTableAlias());
-                $toAdd = (string)$constraint;
-            } elseif (is_callable($constraint)) {
-                $toAdd = call_user_func_array($constraint, []);
-            }
-
+            $toAdd = $this->getConstraintString($constraint);
             if ($toAdd !== '') $or[] = $toAdd;
         }
 
