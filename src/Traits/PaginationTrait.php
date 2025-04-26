@@ -11,12 +11,10 @@ trait PaginationTrait
 
     final public function pagination(int $page = 0, int $limit = 0): static
     {
-        if ($page < 1) {
-            $page = 1;
-        }
+        if ($page < 1) $page = 1;
         --$page;
         $this->page = $page;
-        $this->limit = $limit;
+        if ($limit > 0) $this->limit = $limit;
 
         if ($this->page >= 0 && $this->limit <= 0) {
             $this->limit = 20;
