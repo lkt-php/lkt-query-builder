@@ -22,6 +22,18 @@ trait PaginationTrait
         return $this;
     }
 
+    final public function andPageIs(int $page = 0): static
+    {
+        $this->page = $page;
+        return $this;
+    }
+
+    final public function andPageLimitIs(int $limit = 0): static
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
     public function hasPagination(): bool
     {
         return $this->page > -1 && $this->limit > -1;
