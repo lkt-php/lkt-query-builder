@@ -87,7 +87,7 @@ class SelectBuilder
         return $r;
     }
 
-    public static function yearMonthDatum(string $column, ?string $as = null): static
+    public static function extractYearMonthDatum(string $column, ?string $as = null): static
     {
         $a = ["EXTRACT(YEAR_MONTH FROM `$column`)"];
         if ($as) $a[] = $as;
