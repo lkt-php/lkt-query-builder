@@ -41,6 +41,7 @@ use Lkt\QueryBuilding\Constraints\DecimalLowerOrEqualThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalLowerThanConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalNotConstraint;
 use Lkt\QueryBuilding\Constraints\DecimalNotInConstraint;
+use Lkt\QueryBuilding\Constraints\ExtractYearMonthEqualConstraint;
 use Lkt\QueryBuilding\Constraints\FieldEqualToFieldConstraint;
 use Lkt\QueryBuilding\Constraints\ForeignKeysContainsConstraint;
 use Lkt\QueryBuilding\Constraints\I18nStringBeginsLikeConstraint;
@@ -1188,6 +1189,18 @@ trait WhereConstraints
     public function orConcatNotEndsLike(array $columns, string $separator, string $value): self
     {
         $this->or[] = ConcatNotEndsLikeConstraint::defineConcat($columns, $separator, $value);
+        return $this;
+    }
+
+    public function andExtractYearMonthEqual(string $column, string $value): self
+    {
+        $this->and[] = ExtractYearMonthEqualConstraint::define($column, $value);
+        return $this;
+    }
+
+    public function orExtractYearMonthEqual(string $column, string $value): self
+    {
+        $this->or[] = ExtractYearMonthEqualConstraint::define($column, $value);
         return $this;
     }
 }

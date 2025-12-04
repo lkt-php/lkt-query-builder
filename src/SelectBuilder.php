@@ -43,6 +43,14 @@ class SelectBuilder
         return $this;
     }
 
+    public function andExtractYearMonthDatum(string $column, ?string $as = null): static
+    {
+        $a = ["EXTRACT(YEAR_MONTH FROM $column)"];
+        if ($as) $a[] = $as;
+        $this->fields[] = implode(' AS ', $a);
+        return $this;
+    }
+
     public static function datum(string $column, ?string $as = null): static
     {
         $a = [$column];
@@ -73,6 +81,15 @@ class SelectBuilder
     public static function monthDatum(string $column, ?string $as = null): static
     {
         $a = ["MONTH($column)"];
+        if ($as) $a[] = $as;
+        $r = new static();
+        $r->fields[] = implode(' AS ', $a);
+        return $r;
+    }
+
+    public static function yearMonthDatum(string $column, ?string $as = null): static
+    {
+        $a = ["EXTRACT(YEAR_MONTH FROM `$column`)"];
         if ($as) $a[] = $as;
         $r = new static();
         $r->fields[] = implode(' AS ', $a);
