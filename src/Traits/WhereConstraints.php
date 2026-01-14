@@ -110,7 +110,7 @@ trait WhereConstraints
         return $whereString;
     }
 
-    protected function getConstraintString(AbstractConstraint|Where|callable $constraint): string
+    protected function getConstraintString(AbstractConstraint|Where|callable|string|int $constraint): string
     {
         if ($constraint instanceof AbstractConstraint) {
             $constraint->setTable($this->getTable(), $this->getTableAlias());
@@ -119,6 +119,8 @@ trait WhereConstraints
 
         if ($constraint instanceof Where) return $constraint->whereConstraintsToString();
         if (is_callable($constraint)) return call_user_func_array($constraint, []);
+        if (is_string($constraint)) return $constraint;
+        if (is_numeric($constraint)) return (string)$constraint;
 
         return '';
     }
