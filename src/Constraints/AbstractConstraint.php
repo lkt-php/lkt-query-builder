@@ -34,13 +34,10 @@ abstract class AbstractConstraint
     protected function getTablePrepend(): string
     {
         $alias = trim($this->tableAlias);
-        if ($alias !== '') {
-            return "{$alias}.";
-        }
+        if ($alias !== '') return "{$alias}.";
+
         $table = trim($this->table);
-        if ($table !== '') {
-            return "{$table}.";
-        }
+        if ($table !== '') return "{$table}.";
         return '';
     }
 }
